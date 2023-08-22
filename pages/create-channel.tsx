@@ -1,66 +1,42 @@
 import Head from "next/head";
 import ApplicationLayout from "@/components/Utilities/ApplicationLayout";
-import {
-  CheckIcon,
-  PhotoIcon,
-  UserCircleIcon,
-} from "@heroicons/react/24/solid";
-
-const steps = [
-  {
-    id: "01",
-    name: "Job Details",
-    description: "Vitae sed mi luctus laoreet.",
-    href: "#",
-    status: "complete",
-  },
-  {
-    id: "02",
-    name: "Application form",
-    description: "Cursus semper viverra.",
-    href: "#",
-    status: "current",
-  },
-  {
-    id: "03",
-    name: "Preview",
-    description: "Penatibus eu quis ante.",
-    href: "#",
-    status: "upcoming",
-  },
-];
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export default function CreateChannel() {
   return (
     <>
       <Head>
         <title>
-          NeoCast | Helping Web3 Companies Make Meaningful Partnerships
+          Create Channel - NeoCast | Push Notification Service for the Neo
+          Blockchain
         </title>
         <meta
           name="title"
-          content="NeoCast | Helping Web3 Companies Make Meaningful Partnerships"
+          content="Create Channel - NeoCast | Push Notification Service for the Neo Blockchain"
         />
         <meta
           name="description"
-          content="NeoCast is an AI-powered platform that effortlessly connects Web3 projects, enabling exponential growth by identifying perfect collaborations."
+          content="Stay informed and in-the-know with real-time push
+          notifications on transactions, smart contracts, and network
+          developments. Empower your Neo experience with NeoCast's
+          timely alerts, ensuring you never miss a beat on the Neo
+          Blockchain."
         />
 
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://neocast.blitzcrafthq.com" />
         <meta
           property="og:title"
-          content="NeoCast | Helping Web3 Companies Make Meaningful Partnerships"
+          content="Create Channel - NeoCast | Push Notification Service for the Neo Blockchain"
         />
         <meta
           property="og:description"
-          content="NeoCast is an AI-powered platform that effortlessly connects Web3 projects, enabling exponential growth by identifying perfect collaborations."
+          content="Stay informed and in-the-know with real-time push
+          notifications on transactions, smart contracts, and network
+          developments. Empower your Neo experience with NeoCast's
+          timely alerts, ensuring you never miss a beat on the Neo
+          Blockchain."
         />
-        <meta property="og:image" content="/meta-image.png" />
+        <meta property="og:image" content="/meta-image.jpg" />
 
         <meta property="twitter:card" content="summary_large_image" />
         <meta
@@ -69,13 +45,17 @@ export default function CreateChannel() {
         />
         <meta
           property="twitter:title"
-          content="NeoCast | Helping Web3 Companies Make Meaningful Partnerships"
+          content="Create Channel - NeoCast | Push Notification Service for the Neo Blockchain"
         />
         <meta
           property="twitter:description"
-          content="NeoCast is an AI-powered platform that effortlessly connects Web3 projects, enabling exponential growth by identifying perfect collaborations."
+          content="Stay informed and in-the-know with real-time push
+          notifications on transactions, smart contracts, and network
+          developments. Empower your Neo experience with NeoCast's
+          timely alerts, ensuring you never miss a beat on the Neo
+          Blockchain."
         />
-        <meta property="twitter:image" content="/meta-image.png" />
+        <meta property="twitter:image" content="/meta-image.jpg" />
       </Head>
 
       <ApplicationLayout>
@@ -83,10 +63,10 @@ export default function CreateChannel() {
           <div className="text-2xl font-black leading-7 text-zinc-900">
             Create Your Channel
           </div>
-          <p className="mt-1 text-sm leading-6 text-zinc-600">
+          <div className="mt-1 text-sm leading-6 text-zinc-600">
             NeoCast makes it extremely easy to open and maintain a genuine
             channel of communication with your users.
-          </p>
+          </div>
 
           <div className="mt-8">
             <form className="space-y-8">
@@ -108,7 +88,7 @@ export default function CreateChannel() {
 
               <div className="rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-zinc-300 focus-within:ring-2 focus-within:ring-secondary-600">
                 <label
-                  htmlFor="name"
+                  htmlFor="channelDescription"
                   className="block text-xs font-medium text-zinc-900"
                 >
                   Channel Description
@@ -118,39 +98,39 @@ export default function CreateChannel() {
                   name="channelDescription"
                   id="channelDescription"
                   className="block w-full px-0 rounded-md border-0 py-1.5 text-zinc-900 ring-0 focus:ring-0 placeholder:text-zinc-400 sm:text-sm sm:leading-6"
-                  placeholder="Barbie is a 2023 American fantasy comedy film directed by Greta Gerwig from a screenplay she wrote with Noah Baumbach..."
+                  placeholder="Pied Piper (PP) was an American tech company based in Silicon Valley, California. The company was formed in 2014 by Richard Hendricks as a company to develop Richard's algorithm that he'd created..."
                 />
               </div>
 
               <div className="rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-zinc-300 focus-within:ring-2 focus-within:ring-secondary-600">
                 <label
-                  htmlFor="name"
+                  htmlFor="websiteURL"
                   className="block text-xs font-medium text-zinc-900"
                 >
                   Website URL
                 </label>
                 <input
                   type="text"
-                  name="name"
-                  id="name"
+                  name="websiteURL"
+                  id="websiteURL"
                   className="block w-full border-0 p-0 text-zinc-900 placeholder:text-zinc-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  placeholder="Barbie Updates"
+                  placeholder="https://piedpiper.com"
                 />
               </div>
 
               <div className="rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-zinc-300 focus-within:ring-2 focus-within:ring-secondary-600">
                 <label
-                  htmlFor="name"
+                  htmlFor="logoURL"
                   className="block text-xs font-medium text-zinc-900"
                 >
                   Logo URL
                 </label>
                 <input
                   type="text"
-                  name="name"
-                  id="name"
+                  name="logoURL"
+                  id="logoURL"
                   className="block w-full border-0 p-0 text-zinc-900 placeholder:text-zinc-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  placeholder="Barbie Updates"
+                  placeholder="https://piedpiper.com/logo.png"
                 />
               </div>
               <div className="flex justify-end">

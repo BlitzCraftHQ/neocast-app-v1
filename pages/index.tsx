@@ -6,33 +6,41 @@ import FAQ from "@/components/Index/FAQ";
 import BetaSignUp from "@/components/Index/BetaSignUp";
 import Problem from "@/components/Index/Problem";
 
-export default function Landing() {
+export default function Index() {
   return (
     <>
       <Head>
         <title>
-          NeoCast | Helping Web3 Companies Make Meaningful Partnerships
+          NeoCast | Push Notification Service for the Neo Blockchain
         </title>
         <meta
           name="title"
-          content="NeoCast | Helping Web3 Companies Make Meaningful Partnerships"
+          content="NeoCast | Push Notification Service for the Neo Blockchain"
         />
         <meta
           name="description"
-          content="NeoCast is an AI-powered platform that effortlessly connects Web3 projects, enabling exponential growth by identifying perfect collaborations."
+          content="Stay informed and in-the-know with real-time push
+          notifications on transactions, smart contracts, and network
+          developments. Empower your Neo experience with NeoCast's
+          timely alerts, ensuring you never miss a beat on the Neo
+          Blockchain."
         />
 
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://neocast.blitzcrafthq.com" />
         <meta
           property="og:title"
-          content="NeoCast | Helping Web3 Companies Make Meaningful Partnerships"
+          content="NeoCast | Push Notification Service for the Neo Blockchain"
         />
         <meta
           property="og:description"
-          content="NeoCast is an AI-powered platform that effortlessly connects Web3 projects, enabling exponential growth by identifying perfect collaborations."
+          content="Stay informed and in-the-know with real-time push
+          notifications on transactions, smart contracts, and network
+          developments. Empower your Neo experience with NeoCast's
+          timely alerts, ensuring you never miss a beat on the Neo
+          Blockchain."
         />
-        <meta property="og:image" content="/meta-image.png" />
+        <meta property="og:image" content="/meta-image.jpg" />
 
         <meta property="twitter:card" content="summary_large_image" />
         <meta
@@ -41,13 +49,17 @@ export default function Landing() {
         />
         <meta
           property="twitter:title"
-          content="NeoCast | Helping Web3 Companies Make Meaningful Partnerships"
+          content="NeoCast | Push Notification Service for the Neo Blockchain"
         />
         <meta
           property="twitter:description"
-          content="NeoCast is an AI-powered platform that effortlessly connects Web3 projects, enabling exponential growth by identifying perfect collaborations."
+          content="Stay informed and in-the-know with real-time push
+          notifications on transactions, smart contracts, and network
+          developments. Empower your Neo experience with NeoCast's
+          timely alerts, ensuring you never miss a beat on the Neo
+          Blockchain."
         />
-        <meta property="twitter:image" content="/meta-image.png" />
+        <meta property="twitter:image" content="/meta-image.jpg" />
       </Head>
 
       <Layout>

@@ -2,6 +2,7 @@ import { Fragment, ReactNode, useState } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import {
   Bars3Icon,
   BellAlertIcon,
@@ -47,6 +48,7 @@ interface Props {
 }
 
 export default function ApplicationLayout({ children }: Props) {
+  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -121,10 +123,10 @@ export default function ApplicationLayout({ children }: Props) {
                           <ul role="list" className="-mx-2 space-y-1">
                             {navigation.map((item) => (
                               <li key={item.name}>
-                                <a
+                                <Link
                                   href={item.href}
                                   className={classNames(
-                                    item.current
+                                    item.href === router.pathname
                                       ? "bg-secondary-700 text-white"
                                       : "text-secondary-200 hover:text-white hover:bg-secondary-700",
                                     "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
@@ -132,7 +134,7 @@ export default function ApplicationLayout({ children }: Props) {
                                 >
                                   <item.icon
                                     className={classNames(
-                                      item.current
+                                      item.href === router.pathname
                                         ? "text-white"
                                         : "text-secondary-200 group-hover:text-white",
                                       "h-6 w-6 shrink-0"
@@ -140,7 +142,7 @@ export default function ApplicationLayout({ children }: Props) {
                                     aria-hidden="true"
                                   />
                                   {item.name}
-                                </a>
+                                </Link>
                               </li>
                             ))}
                           </ul>
@@ -199,10 +201,10 @@ export default function ApplicationLayout({ children }: Props) {
                   <ul role="list" className="-mx-2 space-y-1">
                     {navigation.map((item) => (
                       <li key={item.name}>
-                        <a
+                        <Link
                           href={item.href}
                           className={classNames(
-                            item.current
+                            item.href === router.pathname
                               ? "bg-secondary-700/80 text-white"
                               : "text-secondary-200 hover:text-white hover:bg-secondary-700",
                             "flex items-center group gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
@@ -210,7 +212,7 @@ export default function ApplicationLayout({ children }: Props) {
                         >
                           <item.icon
                             className={classNames(
-                              item.current
+                              item.href === router.pathname
                                 ? "text-white"
                                 : "text-secondary-200 group-hover:text-white",
                               "h-8 w-8 shrink-0"
@@ -218,7 +220,7 @@ export default function ApplicationLayout({ children }: Props) {
                             aria-hidden="true"
                           />
                           {item.name}
-                        </a>
+                        </Link>
                       </li>
                     ))}
                   </ul>

@@ -1,6 +1,7 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect } from "react";
 import { Disclosure } from "@headlessui/react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import Footer from "@/components/Utilities/Footer";
 
@@ -22,24 +23,11 @@ interface Props {
 
 export default function Layout({ children }: Props) {
   const router = useRouter();
-  const [scrollPosition, setScrollPosition] = useState(0);
 
-  useEffect(() => {
-    console.log(router.pathname);
-  }, [router]);
-
-  const handleScroll = () => {
-    const position = window.pageYOffset;
-    setScrollPosition(position);
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  function signIn() {
+    localStorage.walletAddress = "NWofUUEUWP1UTeMi62zf86R4GVqy2knkkM";
+    router.push("/channels");
+  }
 
   return (
     <>
@@ -48,13 +36,6 @@ export default function Layout({ children }: Props) {
           <Disclosure
             as="nav"
             className="border-b border-secondary-600 border-opacity-25 bg-gradient-to-r from-primary-900/50 to-secondary-900/50 lg:border-none"
-            style={
-              scrollPosition > 0
-                ? {
-                    backdropFilter: "blur(10px)",
-                  }
-                : {}
-            }
           >
             {() => (
               <>
@@ -69,14 +50,19 @@ export default function Layout({ children }: Props) {
                           src="/logo/color.svg"
                           alt="NeoCast"
                         />
-                        <span className="font-black text-white text-3xl">
-                          NeoCast
-                        </span>
+                        <div>
+                          <div className="font-black text-white text-3xl">
+                            NeoCast
+                          </div>
+                          <div className="text-zinc-400 text-xs font-semibold">
+                            by BlitzCraft Labs
+                          </div>
+                        </div>
                       </div>
                       <div className="hidden lg:ml-10 lg:block">
                         <div className="flex space-x-4">
                           {navigation.map((item) => (
-                            <a
+                            <Link
                               key={item.name}
                               href={item.href}
                               className={classNames(
@@ -87,13 +73,16 @@ export default function Layout({ children }: Props) {
                               )}
                             >
                               {item.name}
-                            </a>
+                            </Link>
                           ))}
                         </div>
                       </div>
                     </div>
                     <div>
-                      <button className="rounded-md bg-white px-3.5 py-2.5 text-lg font-semibold text-zinc-900 ring-1 ring-inset ring-zinc-300 hover:bg-zinc-50">
+                      <button
+                        onClick={() => signIn()}
+                        className="rounded-md bg-white px-3.5 py-2.5 text-lg font-semibold text-zinc-900 ring-1 ring-inset ring-zinc-300 hover:bg-zinc-50"
+                      >
                         Launch dApp
                       </button>
                     </div>

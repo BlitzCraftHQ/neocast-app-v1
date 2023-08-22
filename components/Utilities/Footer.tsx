@@ -101,7 +101,8 @@ export default function Footer() {
           ))}
         </div>
         <p className="mt-10 text-center text-md leading-5 text-zinc-500">
-          &copy; 2023 NeoCast. All rights reserved.
+          &copy; 2023 BlitzCraft Labs. All rights reserved. <br />
+          NeoCast and BlitzCraft Labs are trademarks of BlitzCraft Technologies.
         </p>
       </div>
     </footer>

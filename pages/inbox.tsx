@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Head from "next/head";
 import ApplicationLayout from "@/components/Utilities/ApplicationLayout";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
 
 const people = [
   {
@@ -13,6 +13,7 @@ const people = [
       "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
     lastSeen: "3h ago",
     lastSeenDateTime: "2023-01-23T13:23Z",
+    link: "fakelink",
   },
   {
     name: "Michael Foster",
@@ -23,6 +24,7 @@ const people = [
       "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
     lastSeen: "3h ago",
     lastSeenDateTime: "2023-01-23T13:23Z",
+    link: "fakelink",
   },
   {
     name: "Dries Vincent",
@@ -32,6 +34,7 @@ const people = [
     imageUrl:
       "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
     lastSeen: null,
+    link: "fakelink",
   },
   {
     name: "Lindsay Walton",
@@ -42,6 +45,7 @@ const people = [
       "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
     lastSeen: "3h ago",
     lastSeenDateTime: "2023-01-23T13:23Z",
+    link: "fakelink",
   },
   {
     name: "Courtney Henry",
@@ -52,6 +56,7 @@ const people = [
       "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
     lastSeen: "3h ago",
     lastSeenDateTime: "2023-01-23T13:23Z",
+    link: "fakelink",
   },
   {
     name: "Tom Cook",
@@ -61,19 +66,20 @@ const people = [
     imageUrl:
       "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
     lastSeen: null,
+    link: "fakelink",
   },
 ];
 
-export default function Channels() {
+export default function Inbox() {
   return (
     <>
       <Head>
         <title>
-          Channels - NeoCast | Push Notification Service for the Neo Blockchain
+          Inbox - NeoCast | Push Notification Service for the Neo Blockchain
         </title>
         <meta
           name="title"
-          content="Channels - NeoCast | Push Notification Service for the Neo Blockchain"
+          content="Inbox - NeoCast | Push Notification Service for the Neo Blockchain"
         />
         <meta
           name="description"
@@ -88,7 +94,7 @@ export default function Channels() {
         <meta property="og:url" content="https://neocast.blitzcrafthq.com" />
         <meta
           property="og:title"
-          content="Channels - NeoCast | Push Notification Service for the Neo Blockchain"
+          content="Inbox - NeoCast | Push Notification Service for the Neo Blockchain"
         />
         <meta
           property="og:description"
@@ -107,7 +113,7 @@ export default function Channels() {
         />
         <meta
           property="twitter:title"
-          content="Channels - NeoCast | Push Notification Service for the Neo Blockchain"
+          content="Inbox - NeoCast | Push Notification Service for the Neo Blockchain"
         />
         <meta
           property="twitter:description"
@@ -122,62 +128,42 @@ export default function Channels() {
 
       <ApplicationLayout>
         <div className="max-w-3xl mx-auto">
-          <div className="relative mt-2 rounded-md shadow-sm">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <MagnifyingGlassIcon
-                className="h-6 w-6 text-zinc-400"
-                aria-hidden="true"
-              />
-            </div>
-            <input
-              type="text"
-              name="account-number"
-              id="account-number"
-              className="block w-full rounded-xl border-0 py-3.5 pl-12 text-zinc-900 ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-secondary-600 sm:text-sm font-semibold sm:leading-6"
-              placeholder="Search by name or 0xb34r"
-            />
-          </div>
-          <div className="mt-5 text-2xl font-black leading-7 text-zinc-900">
-            Popular Channels
+          <div className="text-2xl font-black leading-7 text-zinc-900">
+            Your Inbox
           </div>
           <p className="mt-1 text-sm leading-6 text-zinc-600">
-            A list of channels that are trending across Neocast right now. See
-            one that you like? Opt in and start receiving notifications!
+            All your notifications from all your sources, in one place.
           </p>
           <div className="mt-5">
-            <ul role="list" className="divide-y divide-zinc-200">
+            <ul role="list">
               {people.map((person) => (
-                <li
-                  key={person.name}
-                  className="flex justify-between gap-x-6 py-5"
-                >
-                  <div className="flex min-w-0 gap-x-4">
-                    <img
-                      className="h-24 w-24 flex-none rounded-xl bg-zinc-50"
-                      src={person.imageUrl}
-                      alt="Channel Logo"
-                    />
-                    <div className="min-w-0 flex-auto">
-                      <p className="text-xl font-semibold leading-6 text-zinc-900">
-                        {person.name}
-                      </p>
-                      <p className="mt-2 truncate text-sm font-medium leading-5 text-zinc-500 max-w-prose whitespace-normal">
-                        {person.description}
-                      </p>
-                      <div className="mt-5 flex gap-x-5">
-                        <span className="inline-flex items-center rounded-full bg-zinc-100 px-2 py-1 text-xs font-medium text-zinc-600 ring-1 ring-inset ring-zinc-500/10">
-                          Badge
-                        </span>
+                <li key={person.name} className="my-3">
+                  <div className="border border-zinc-200 rounded-xl">
+                    <div className="flex items-center justify-between px-5 py-2">
+                      <div className="flex items-center gap-x-3">
+                        <img
+                          className="h-8 w-8 flex-none rounded-full bg-zinc-50"
+                          src={person.imageUrl}
+                          alt="Channel Logo"
+                        />
+                        <div className="text-sm font-semibold leading-6 text-zinc-900">
+                          {person.name}
+                        </div>
                       </div>
+                      <Link
+                        href={person.link}
+                        className="text-xs font-semibold text-zinc-500"
+                      >
+                        View In App
+                      </Link>
                     </div>
-                  </div>
-                  <div className="hidden shrink-0 sm:flex sm:flex-col sm:items-end justify-center">
-                    <button
-                      type="button"
-                      className="rounded-md bg-secondary-600 px-8 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-secondary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary-600"
-                    >
-                      Opt In
-                    </button>
+                    <div className="border-t border-zinc-200 px-5 py-5 text-sm text-zinc-800">
+                      Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                      Velit dolores quibusdam nihil provident, fugit iure
+                      repellat assumenda ex! Magni atque repellat quia neque qui
+                      unde ratione perferendis exercitationem accusantium
+                      reprehenderit?
+                    </div>
                   </div>
                 </li>
               ))}

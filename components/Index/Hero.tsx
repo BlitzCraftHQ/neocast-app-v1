@@ -61,10 +61,11 @@ export default function Hero() {
                   Push Notification Service for the <br /> Neo Blockchain.
                 </h1>
                 <p className="relative mt-6 text-xl font-medium leading-8 text-zinc-100 sm:max-w-md lg:max-w-none">
-                  Step into the future with NEOCast - your NEO Protocol-powered
-                  partner in linking Web3 businesses with the right
-                  collaborators. Experience exponential growth through seamless
-                  connections and perfect partnerships.
+                  Stay informed and in-the-know with real-time push
+                  notifications on transactions, smart contracts, and network
+                  developments. Empower your Neo experience with NeoCast&apos;s
+                  timely alerts, ensuring you never miss a beat on the Neo
+                  Blockchain.
                 </p>
                 <div className="mt-10 flex items-center gap-x-6">
                   <Link

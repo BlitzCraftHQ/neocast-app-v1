@@ -6,6 +6,21 @@
         <priority>1</priority>
     </url>
     <url>
+        <loc>https://neocast.blitzcrafthq.com/channels</loc>
+        <lastmod>2017-06-14T19:55:25+02:00</lastmod>
+        <priority>1</priority>
+    </url>
+    <url>
+        <loc>https://neocast.blitzcrafthq.com/create-channel</loc>
+        <lastmod>2017-06-14T19:55:25+02:00</lastmod>
+        <priority>1</priority>
+    </url>
+    <url>
+        <loc>https://neocast.blitzcrafthq.com/inbox</loc>
+        <lastmod>2017-06-14T19:55:25+02:00</lastmod>
+        <priority>1</priority>
+    </url>
+    <url>
         <loc>https://neocast.blitzcrafthq.com/terms</loc>
         <lastmod>2016-06-24T10:23:20+02:00</lastmod>
         <priority>0.8</priority>
