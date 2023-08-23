@@ -22,8 +22,8 @@ const navigation = [
     current: true,
   },
   {
-    name: "Inbox",
-    href: "/inbox",
+    name: "Notifications",
+    href: "/notifications",
     icon: BellAlertIcon,
     current: false,
   },

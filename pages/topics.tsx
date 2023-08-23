@@ -1,70 +1,87 @@
 /* eslint-disable @next/next/no-img-element */
+import {
+  JSXElementConstructor,
+  Key,
+  PromiseLikeOfReactNode,
+  ReactElement,
+  ReactFragment,
+  ReactPortal,
+  useEffect,
+  useState,
+} from "react";
 import Head from "next/head";
-import ApplicationLayout from "@/components/Utilities/ApplicationLayout";
+import Link from "next/link";
+import axios from "axios";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-
-const people = [
-  {
-    name: "Leslie Alexander",
-    description:
-      "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perspiciatis vel voluptates, reiciendis, tempora obcaecati laboriosam corporis, enim rem quisquam earum ratione quasi!",
-    role: "Co-Founder / CEO",
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: "3h ago",
-    lastSeenDateTime: "2023-01-23T13:23Z",
-  },
-  {
-    name: "Michael Foster",
-    description:
-      "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perspiciatis vel voluptates, reiciendis, tempora obcaecati laboriosam corporis, enim rem quisquam earum ratione quasi!",
-    role: "Co-Founder / CTO",
-    imageUrl:
-      "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: "3h ago",
-    lastSeenDateTime: "2023-01-23T13:23Z",
-  },
-  {
-    name: "Dries Vincent",
-    description:
-      "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perspiciatis vel voluptates, reiciendis, tempora obcaecati laboriosam corporis, enim rem quisquam earum ratione quasi!",
-    role: "Business Relations",
-    imageUrl:
-      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: null,
-  },
-  {
-    name: "Lindsay Walton",
-    description:
-      "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perspiciatis vel voluptates, reiciendis, tempora obcaecati laboriosam corporis, enim rem quisquam earum ratione quasi!",
-    role: "Front-end Developer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: "3h ago",
-    lastSeenDateTime: "2023-01-23T13:23Z",
-  },
-  {
-    name: "Courtney Henry",
-    description:
-      "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perspiciatis vel voluptates, reiciendis, tempora obcaecati laboriosam corporis, enim rem quisquam earum ratione quasi!",
-    role: "Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: "3h ago",
-    lastSeenDateTime: "2023-01-23T13:23Z",
-  },
-  {
-    name: "Tom Cook",
-    description:
-      "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perspiciatis vel voluptates, reiciendis, tempora obcaecati laboriosam corporis, enim rem quisquam earum ratione quasi!",
-    role: "Director of Product",
-    imageUrl:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: null,
-  },
-];
+import ApplicationLayout from "@/components/Utilities/ApplicationLayout";
 
 export default function Channels() {
+  const [topics, setTopics] = useState<any>([]);
+  const [subscribedTopics, setSubscribedTopics] = useState<any>([]);
+
+  function getTopics() {
+    axios
+      .get("/api/topics")
+      .then(function (response) {
+        // handle success
+        console.log(response);
+        setTopics(response.data.topics);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .finally(function () {
+        // always executed
+      });
+  }
+
+  useEffect(() => {
+    axios
+      .get(`/api/users?walletAddress=${localStorage.walletAddress}`)
+      .then(function (response) {
+        // handle success
+        console.log(response.data.userData.subscribedTopics);
+        setSubscribedTopics(response.data.userData.subscribedTopics);
+        getTopics();
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      });
+  }, []);
+
+  function optToggle(id: (_id: any) => void) {
+    const opt = subscribedTopics.includes(id) ? "out" : "in";
+    axios
+      .put("/api/topics/opt", {
+        topicID: id,
+        walletAddress: localStorage.walletAddress,
+        action: opt,
+      })
+      .then(function (response) {
+        console.log(response);
+        if (response.data.success) {
+          if (opt === "in") {
+            setSubscribedTopics([
+              ...subscribedTopics, // that contains all the old items
+              id,
+            ]);
+            console.log(subscribedTopics);
+          } else {
+            let updatedSubscibedTopics = subscribedTopics.filter(
+              (topicID: (_id: any) => void) => topicID !== id
+            );
+            setSubscribedTopics(updatedSubscibedTopics);
+            console.log(subscribedTopics);
+          }
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
   return (
     <>
       <Head>
@@ -146,41 +163,74 @@ export default function Channels() {
           </p>
           <div className="mt-5">
             <ul role="list" className="divide-y divide-zinc-200">
-              {people.map((person) => (
-                <li
-                  key={person.name}
-                  className="flex justify-between gap-x-6 py-5"
-                >
-                  <div className="flex min-w-0 gap-x-4">
-                    <img
-                      className="h-24 w-24 flex-none rounded-xl bg-zinc-50"
-                      src={person.imageUrl}
-                      alt="Channel Logo"
-                    />
-                    <div className="min-w-0 flex-auto">
-                      <p className="text-xl font-semibold leading-6 text-zinc-900">
-                        {person.name}
-                      </p>
-                      <p className="mt-2 truncate text-sm font-medium leading-5 text-zinc-500 max-w-prose whitespace-normal">
-                        {person.description}
-                      </p>
-                      <div className="mt-5 flex gap-x-5">
-                        <span className="inline-flex items-center rounded-full bg-zinc-100 px-2 py-1 text-xs font-medium text-zinc-600 ring-1 ring-inset ring-zinc-500/10">
-                          Badge
-                        </span>
+              {topics.map(
+                (
+                  topic: {
+                    _id(_id: any): void;
+                    logoURL: string | undefined;
+                    websiteURL: string | undefined;
+                    name:
+                      | string
+                      | number
+                      | boolean
+                      | ReactElement<any, string | JSXElementConstructor<any>>
+                      | ReactFragment
+                      | ReactPortal
+                      | PromiseLikeOfReactNode
+                      | null
+                      | undefined;
+                    description:
+                      | string
+                      | number
+                      | boolean
+                      | ReactElement<any, string | JSXElementConstructor<any>>
+                      | ReactFragment
+                      | ReactPortal
+                      | PromiseLikeOfReactNode
+                      | null
+                      | undefined;
+                  },
+                  index: Key | null | undefined
+                ) => (
+                  <li key={index} className="flex justify-between gap-x-6 py-5">
+                    <div className="flex min-w-0 gap-x-4">
+                      <img
+                        className="h-24 w-24 flex-none rounded-xl bg-zinc-50"
+                        src={topic.logoURL}
+                        alt="Channel Logo"
+                      />
+                      <div className="min-w-0 flex-auto">
+                        <p className="text-xl font-semibold leading-6 text-zinc-900">
+                          {topic.name}
+                        </p>
+                        <p className="mt-2 truncate text-sm font-medium leading-5 text-zinc-500 max-w-prose whitespace-normal">
+                          {topic.description}
+                        </p>
+                        <div className="mt-5 flex gap-x-5">
+                          <Link
+                            href={topic.websiteURL || ""}
+                            target="_blank"
+                            className="inline-flex items-center rounded-full bg-zinc-100 px-2 py-1 text-xs font-medium text-zinc-600 ring-1 ring-inset ring-zinc-500/10"
+                          >
+                            {topic.websiteURL}
+                          </Link>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="hidden shrink-0 sm:flex sm:flex-col sm:items-end justify-center">
-                    <button
-                      type="button"
-                      className="rounded-md bg-secondary-600 px-8 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-secondary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary-600"
-                    >
-                      Opt In
-                    </button>
-                  </div>
-                </li>
-              ))}
+                    <div className="hidden shrink-0 sm:flex sm:flex-col sm:items-end justify-center">
+                      <button
+                        type="button"
+                        onClick={() => optToggle(topic._id)}
+                        className="rounded-md bg-secondary-600 px-8 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-secondary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary-600"
+                      >
+                        {subscribedTopics.includes(topic._id)
+                          ? "Opt Out"
+                          : "Opt In"}
+                      </button>
+                    </div>
+                  </li>
+                )
+              )}
             </ul>
           </div>
         </div>
