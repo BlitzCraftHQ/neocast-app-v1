@@ -64,10 +64,10 @@ export default function Index() {
 
       <Layout>
         <Hero />
-        <Problem />
+        {/* <Problem />
         <Why />
         <BetaSignUp />
-        <FAQ />
+        <FAQ /> */}
       </Layout>
     </>
   );

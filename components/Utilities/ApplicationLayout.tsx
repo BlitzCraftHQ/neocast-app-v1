@@ -16,8 +16,8 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid";
 
 const navigation = [
   {
-    name: "Channels",
-    href: "/channels",
+    name: "Topics",
+    href: "/topics",
     icon: ChatBubbleOvalLeftEllipsisIcon,
     current: true,
   },
@@ -187,10 +187,10 @@ export default function ApplicationLayout({ children }: Props) {
             <nav className="flex flex-1 flex-col">
               <div className="mx-4">
                 <Link
-                  href="create-channel"
+                  href="/create-topic"
                   className="block text-center rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 hover:bg-zinc-50"
                 >
-                  Create Channel
+                  Create Topic
                 </Link>
               </div>
               <ul

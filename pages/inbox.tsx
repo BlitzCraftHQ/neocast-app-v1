@@ -2,6 +2,7 @@
 import Head from "next/head";
 import ApplicationLayout from "@/components/Utilities/ApplicationLayout";
 import Link from "next/link";
+import { LinkIcon } from "@heroicons/react/24/outline";
 
 const people = [
   {
@@ -157,12 +158,18 @@ export default function Inbox() {
                         View In App
                       </Link>
                     </div>
-                    <div className="border-t border-zinc-200 px-5 py-5 text-sm text-zinc-800">
-                      Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                      Velit dolores quibusdam nihil provident, fugit iure
-                      repellat assumenda ex! Magni atque repellat quia neque qui
-                      unde ratione perferendis exercitationem accusantium
-                      reprehenderit?
+                    <div className="border-t border-zinc-200 px-5 pt-3 pb-5">
+                      <div className="flex items-center gap-x-2 font-bold text-xl text-zinc-900">
+                        <span>Lorem, ipsum dolor sit</span>
+                        <LinkIcon className="h-4 w-4" aria-hidden="true" />
+                      </div>
+                      <div className="mt-5 text-sm text-zinc-700">
+                        Lorem, ipsum dolor sit amet consectetur adipisicing
+                        elit. Velit dolores quibusdam nihil provident, fugit
+                        iure repellat assumenda ex! Magni atque repellat quia
+                        neque qui unde ratione perferendis exercitationem
+                        accusantium reprehenderit?
+                      </div>
                     </div>
                   </div>
                 </li>

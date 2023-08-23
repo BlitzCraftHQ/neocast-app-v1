@@ -69,11 +69,11 @@ export default function Channels() {
     <>
       <Head>
         <title>
-          Channels - NeoCast | Push Notification Service for the Neo Blockchain
+          Topics - NeoCast | Push Notification Service for the Neo Blockchain
         </title>
         <meta
           name="title"
-          content="Channels - NeoCast | Push Notification Service for the Neo Blockchain"
+          content="Topics - NeoCast | Push Notification Service for the Neo Blockchain"
         />
         <meta
           name="description"
@@ -88,7 +88,7 @@ export default function Channels() {
         <meta property="og:url" content="https://neocast.blitzcrafthq.com" />
         <meta
           property="og:title"
-          content="Channels - NeoCast | Push Notification Service for the Neo Blockchain"
+          content="Topics - NeoCast | Push Notification Service for the Neo Blockchain"
         />
         <meta
           property="og:description"
@@ -107,7 +107,7 @@ export default function Channels() {
         />
         <meta
           property="twitter:title"
-          content="Channels - NeoCast | Push Notification Service for the Neo Blockchain"
+          content="Topics - NeoCast | Push Notification Service for the Neo Blockchain"
         />
         <meta
           property="twitter:description"
@@ -138,11 +138,11 @@ export default function Channels() {
             />
           </div>
           <div className="mt-5 text-2xl font-black leading-7 text-zinc-900">
-            Popular Channels
+            Popular Topics
           </div>
           <p className="mt-1 text-sm leading-6 text-zinc-600">
-            A list of channels that are trending across Neocast right now. See
-            one that you like? Opt in and start receiving notifications!
+            A list of topics that are trending across Neocast right now. See one
+            that you like? Opt in and start receiving notifications!
           </p>
           <div className="mt-5">
             <ul role="list" className="divide-y divide-zinc-200">
