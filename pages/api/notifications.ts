@@ -3,54 +3,61 @@ import { db } from "@/utilities/mongo";
 export default async function notifications(req: any, res: any) {
   if (req.method === "GET") {
     const walletAddress = req.query.walletAddress;
-    const userData = await db
-      .collection("users")
-      .findOne({ walletAddress: walletAddress });
-    if (userData) {
-      const subscribedTopics = userData.subscribedTopics;
-      console.log(subscribedTopics);
 
-      let pipeline = [
-        {
-          $match: {
-            topicID: {
-              $in: subscribedTopics,
-            },
+    let pipeline = [
+      {
+        $match: {
+          walletAddress: walletAddress,
+        },
+      },
+      {
+        $unwind: {
+          path: "$subscribedTopics",
+        },
+      },
+      {
+        $lookup: {
+          from: "notifications",
+          localField: "subscribedTopics",
+          foreignField: "topicID",
+          as: "notification",
+        },
+      },
+      {
+        $unwind: {
+          path: "$notification",
+        },
+      },
+      {
+        $project: {
+          walletAddress: 1,
+          notification: 1,
+          subscribedTopic: {
+            $toObjectId: "$subscribedTopics",
           },
         },
-        {
-          $project: {
-            topicID: {
-              $toObjectId: "$topicID",
-            },
-            name: 1,
-            description: 1,
-            mediaURL: 1,
-            websiteURL: 1,
-          },
+      },
+      {
+        $lookup: {
+          from: "topics",
+          localField: "subscribedTopic",
+          foreignField: "_id",
+          as: "topicData",
         },
-        {
-          $lookup: {
-            from: "topics",
-            localField: "topicID",
-            foreignField: "_id",
-            as: "topicData",
-          },
+      },
+      {
+        $unwind: {
+          path: "$topicData",
         },
-        {
-          $unwind: {
-            path: "$topicData",
-          },
-        },
-      ];
+      },
+    ];
 
-      const result = await db
-        .collection("notifications")
-        // .find({ topicID: { $in: subscribedTopics } })
-        .aggregate(pipeline)
-        .toArray();
-      res.status(200).json({ notifications: result });
-    }
+    const result = await db
+      .collection("notifications")
+      // .find({ topicID: { $in: subscribedTopics } })
+      .aggregate(pipeline)
+      .toArray();
+    res.status(200).json({ notifications: result });
   } else {
     // Handle any other HTTP method
   }
