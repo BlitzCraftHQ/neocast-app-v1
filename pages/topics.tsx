@@ -13,18 +13,36 @@ import Head from "next/head";
 import Link from "next/link";
 import axios from "axios";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { useWalletConnect } from "@cityofzion/wallet-connect-sdk-react";
 import ApplicationLayout from "@/components/Utilities/ApplicationLayout";
 
 export default function Channels() {
+  const wcSdk = useWalletConnect();
   const [topics, setTopics] = useState<any>([]);
   const [subscribedTopics, setSubscribedTopics] = useState<any>([]);
+  const [walletAddress, setWalletAddress] = useState<any>("");
+
+  // Check if user is logged in
+  useEffect(() => {
+    // Check if user is logged in on page load
+    if (wcSdk.isConnected()) {
+      // console.log(wcSdk.getAccountAddress());
+      // console.log(wcSdk.getChainId());
+      setWalletAddress(wcSdk.getAccountAddress());
+      getUserData();
+    } else {
+      // router.push("/");
+      // await wcSdk.connect("neo3:testnet", ["testInvoke"]);
+      console.log("User isn't logged in");
+    }
+  }, [walletAddress]);
 
   function getTopics() {
     axios
       .get("/api/topics")
       .then(function (response) {
         // handle success
-        console.log(response);
+        // console.log(response);
         setTopics(response.data.topics);
       })
       .catch(function (error) {
@@ -36,12 +54,12 @@ export default function Channels() {
       });
   }
 
-  useEffect(() => {
+  function getUserData() {
     axios
-      .get(`/api/users?walletAddress=${localStorage.walletAddress}`)
+      .get(`/api/users?walletAddress=${walletAddress}`)
       .then(function (response) {
         // handle success
-        console.log(response.data.userData.subscribedTopics);
+        // console.log(response.data.userData.subscribedTopics);
         setSubscribedTopics(response.data.userData.subscribedTopics);
         getTopics();
       })
@@ -49,31 +67,31 @@ export default function Channels() {
         // handle error
         console.log(error);
       });
-  }, []);
+  }
 
   function optToggle(id: (_id: any) => void) {
     const opt = subscribedTopics.includes(id) ? "out" : "in";
     axios
       .put("/api/topics/opt", {
         topicID: id,
-        walletAddress: localStorage.walletAddress,
+        walletAddress: walletAddress,
         action: opt,
       })
       .then(function (response) {
-        console.log(response);
+        // console.log(response);
         if (response.data.success) {
           if (opt === "in") {
             setSubscribedTopics([
               ...subscribedTopics, // that contains all the old items
               id,
             ]);
-            console.log(subscribedTopics);
+            // console.log(subscribedTopics);
           } else {
             let updatedSubscibedTopics = subscribedTopics.filter(
               (topicID: (_id: any) => void) => topicID !== id
             );
             setSubscribedTopics(updatedSubscibedTopics);
-            console.log(subscribedTopics);
+            // console.log(subscribedTopics);
           }
         }
       })

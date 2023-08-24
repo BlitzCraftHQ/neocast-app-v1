@@ -3,6 +3,7 @@ import { Disclosure } from "@headlessui/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useWalletConnect } from "@cityofzion/wallet-connect-sdk-react";
 import Footer from "@/components/Utilities/Footer";
 
 const navigation = [
@@ -23,11 +24,32 @@ interface Props {
 
 export default function Layout({ children }: Props) {
   const router = useRouter();
+  const wcSdk = useWalletConnect();
 
-  function signIn() {
-    localStorage.walletAddress = "NWofUUEUWP1UTeMi62zf86R4GVqy2knkkM";
-    router.push("/channels");
+  async function signIn() {
+    if (!wcSdk.isConnected()) {
+      await wcSdk.connect("neo3:testnet", []);
+      wcSdk.isConnected() && router.push("/topics");
+    } else {
+      wcSdk.isConnected() && router.push("/topics");
+    }
+    // if (wcSdk.isConnected()) {
+    //   console.log(wcSdk.getAccountAddress());
+    //   console.log(wcSdk.getChainId());
+    //   console.log(wcSdk.session?.namespaces);
+    //   console.log(wcSdk.session?.peer.metadata);
+    //   router.push("/topics");
+    // }
   }
+
+  // useEffect(() => {
+  //   if (wcSdk.isConnected()) {
+  //     console.log(wcSdk.getAccountAddress());
+  //     console.log(wcSdk.getChainId());
+  //     console.log(wcSdk.session?.namespaces);
+  //     console.log(wcSdk.session?.peer.metadata);
+  //   }
+  // });
 
   return (
     <>

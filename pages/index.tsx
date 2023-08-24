@@ -1,10 +1,6 @@
 import Head from "next/head";
 import Layout from "@/components/Utilities/Layout";
 import Hero from "@/components/Index/Hero";
-import Why from "@/components/Index/Why";
-import FAQ from "@/components/Index/FAQ";
-import BetaSignUp from "@/components/Index/BetaSignUp";
-import Problem from "@/components/Index/Problem";
 
 export default function Index() {
   return (

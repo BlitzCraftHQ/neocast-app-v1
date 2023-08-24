@@ -1,9 +1,11 @@
-import { Fragment, ReactNode, useState } from "react";
+import { Fragment, ReactNode, useEffect, useState } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useWalletConnect } from "@cityofzion/wallet-connect-sdk-react";
 import {
+  ArrowPathIcon,
   Bars3Icon,
   BellAlertIcon,
   BellIcon,
@@ -13,6 +15,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import axios from "axios";
 
 const navigation = [
   {
@@ -34,10 +37,6 @@ const navigation = [
     current: false,
   },
 ];
-const userNavigation = [
-  { name: "Your profile", href: "#" },
-  { name: "Sign out", href: "#" },
-];
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -49,7 +48,71 @@ interface Props {
 
 export default function ApplicationLayout({ children }: Props) {
   const router = useRouter();
+  const wcSdk = useWalletConnect();
+  const [open, setOpen] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [walletAddress, setWalletAddress] = useState<string>("");
+
+  // Check if user is logged in
+  useEffect(() => {
+    // Check if user is logged in on page load
+    if (wcSdk.isConnected()) {
+      console.log("user is logged in");
+      // console.log(wcSdk.getChainId());
+      const address = wcSdk.getAccountAddress();
+      if (address) {
+        setWalletAddress(address);
+        console.log(address);
+        if (walletAddress !== "") {
+          getUserData();
+        }
+        console.log("Test");
+      }
+    } else {
+      // router.push("/");
+      // await wcSdk.connect("neo3:testnet", ["testInvoke"]);
+      console.log("User isn't logged in");
+    }
+  }, [walletAddress]);
+
+  function getUserData() {
+    console.log("Get User Data Function", walletAddress);
+    axios
+      .get(`/api/users?walletAddress=${walletAddress}`)
+      .then(function (response) {
+        // handle success
+        console.log(response.data.userData);
+        if (response.data.userData === null) {
+          // Create user
+          createUser();
+        }
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      });
+  }
+
+  function createUser() {
+    axios
+      .post(`/api/users/create`, {
+        walletAddress: walletAddress,
+      })
+      .then(function (response) {
+        // handle success
+        console.log(response.data.success);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      });
+  }
+
+  async function signOut() {
+    await wcSdk.disconnect().then(() => {
+      router.push("/");
+    });
+  }
 
   return (
     <>
@@ -247,7 +310,7 @@ export default function ApplicationLayout({ children }: Props) {
               aria-hidden="true"
             />
 
-            <div className="flex items-center gap-x-4 lg:gap-x-6">
+            <div className="flex items-center gap-x-4 lg:gap-x-6 xl:gap-x-2">
               <button
                 type="button"
                 className="-m-2.5 p-2.5 text-zinc-400 hover:text-zinc-500"
@@ -262,23 +325,24 @@ export default function ApplicationLayout({ children }: Props) {
                 aria-hidden="true"
               />
 
-              {/* Profile dropdown */}
+              {/* Network dropdown */}
               <Menu as="div" className="relative">
                 <Menu.Button className="-m-1.5 flex items-center p-1.5">
-                  <span className="sr-only">Open user menu</span>
+                  <span className="sr-only">Open network menu</span>
                   <Image
                     className="h-12 w-auto"
                     height={512}
                     width={512}
-                    src="/logo-white.png"
-                    alt="NeoCast"
+                    src="/NEO_512_512.svg"
+                    alt="NEO"
                   />
                   <span className="hidden lg:flex lg:items-center">
                     <span
                       className="ml-4 text-sm font-semibold leading-6 text-zinc-900"
                       aria-hidden="true"
                     >
-                      Tom Cook
+                      {walletAddress.slice(0, 4)}...
+                      {walletAddress.slice(walletAddress.length - 4)}
                     </span>
                     <ChevronDownIcon
                       className="ml-2 h-5 w-5 text-zinc-400"
@@ -296,21 +360,68 @@ export default function ApplicationLayout({ children }: Props) {
                   leaveTo="transform opacity-0 scale-95"
                 >
                   <Menu.Items className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-zinc-900/5 focus:outline-none">
-                    {userNavigation.map((item) => (
-                      <Menu.Item key={item.name}>
-                        {({ active }) => (
-                          <a
-                            href={item.href}
-                            className={classNames(
-                              active ? "bg-zinc-50" : "",
-                              "block px-3 py-1 text-sm leading-6 text-zinc-900"
-                            )}
-                          >
-                            {item.name}
-                          </a>
-                        )}
-                      </Menu.Item>
-                    ))}
+                    <Menu.Item>
+                      <Link
+                        href={`/profile/${walletAddress}`}
+                        className="hover:bg-zinc-50 block px-3 py-1 text-sm leading-6 text-zinc-900"
+                      >
+                        NEO Testnet
+                      </Link>
+                    </Menu.Item>
+                    <Menu.Item>
+                      <Link
+                        href={`/profile/${walletAddress}`}
+                        className="hover:bg-zinc-50 block px-3 py-1 text-sm leading-6 text-zinc-900"
+                      >
+                        NEO Mainnet
+                      </Link>
+                    </Menu.Item>
+                  </Menu.Items>
+                </Transition>
+              </Menu>
+
+              {/* User menu dropdown */}
+              <Menu as="div" className="relative">
+                <Menu.Button className="-m-1.5 hidden lg:flex lg:items-center p-1.5">
+                  <span
+                    className="ml-4 text-sm font-semibold leading-6 text-zinc-900"
+                    aria-hidden="true"
+                  >
+                    {walletAddress.slice(0, 4)}...
+                    {walletAddress.slice(walletAddress.length - 4)}
+                  </span>
+                  <ChevronDownIcon
+                    className="ml-2 h-5 w-5 text-zinc-400"
+                    aria-hidden="true"
+                  />
+                </Menu.Button>
+                <Transition
+                  as={Fragment}
+                  enter="transition ease-out duration-100"
+                  enterFrom="transform opacity-0 scale-95"
+                  enterTo="transform opacity-100 scale-100"
+                  leave="transition ease-in duration-75"
+                  leaveFrom="transform opacity-100 scale-100"
+                  leaveTo="transform opacity-0 scale-95"
+                >
+                  <Menu.Items className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-zinc-900/5 focus:outline-none">
+                    <Menu.Item>
+                      <Link
+                        href={`/profile/${walletAddress}`}
+                        className="hover:bg-zinc-50 block px-3 py-1 text-sm leading-6 text-zinc-900"
+                      >
+                        {walletAddress.slice(0, 4)}...
+                        {walletAddress.slice(walletAddress.length - 4)}
+                      </Link>
+                    </Menu.Item>
+                    <Menu.Item>
+                      <span
+                        onClick={() => signOut()}
+                        className="cursor-pointer hover:bg-zinc-50 block px-3 py-1 text-sm leading-6 text-zinc-900"
+                      >
+                        Disconnect
+                      </span>
+                    </Menu.Item>
                   </Menu.Items>
                 </Transition>
               </Menu>
@@ -322,6 +433,62 @@ export default function ApplicationLayout({ children }: Props) {
           </main>
         </div>
       </div>
+
+      {/* Account setup modal start */}
+      {/* <Transition.Root show={open} as={Fragment}>
+        <Dialog as="div" className="relative z-50" onClose={setOpen}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-zinc-500 bg-opacity-75 transition-opacity" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 z-10 overflow-y-auto">
+            <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                enterTo="opacity-100 translate-y-0 sm:scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+                leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              >
+                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
+                  <div>
+                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-secondary-100">
+                      <ArrowPathIcon
+                        className="h-6 w-6 text-secondary-600"
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <div className="mt-3 text-center sm:mt-5">
+                      <Dialog.Title
+                        as="h3"
+                        className="text-base font-semibold leading-6 text-zinc-900"
+                      >
+                        Hang In There!
+                      </Dialog.Title>
+                      <div className="mt-2">
+                        <p className="text-sm text-zinc-500">
+                          Please give us a few seconds while we set your
+                          dashboard up.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition.Root> */}
     </>
   );
 }
