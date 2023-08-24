@@ -13,16 +13,34 @@ import {
 import Head from "next/head";
 import Link from "next/link";
 import axios from "axios";
+import { useWalletConnect } from "@cityofzion/wallet-connect-sdk-react";
+import { UrlObject } from "url";
 import { LinkIcon } from "@heroicons/react/24/outline";
 import ApplicationLayout from "@/components/Utilities/ApplicationLayout";
-import { UrlObject } from "url";
 
 export default function Notifications() {
+  const wcSdk = useWalletConnect();
   const [notifications, setNotifications] = useState<any>([]);
+  const [walletAddress, setWalletAddress] = useState<any>("");
 
+  // Check if user is logged in
   useEffect(() => {
+    // Check if user is logged in on page load
+    if (wcSdk.isConnected()) {
+      // console.log(wcSdk.getAccountAddress());
+      // console.log(wcSdk.getChainId());
+      setWalletAddress(wcSdk.getAccountAddress());
+      getNotifications();
+    } else {
+      // router.push("/");
+      // await wcSdk.connect("neo3:testnet", ["testInvoke"]);
+      console.log("User isn't logged in");
+    }
+  }, [walletAddress]);
+
+  function getNotifications() {
     axios
-      .get(`/api/notifications?walletAddress=${localStorage.walletAddress}`)
+      .get(`/api/notifications?walletAddress=${walletAddress}`)
       .then(function (response) {
         // handle success
         // console.log(response);
@@ -32,7 +50,7 @@ export default function Notifications() {
         // handle error
         console.log(error);
       });
-  }, []);
+  }
 
   return (
     <>
