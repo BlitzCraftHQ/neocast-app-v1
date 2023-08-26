@@ -1,13 +1,13 @@
 import { db } from "@/utilities/mongo";
 
 export default function create(req: any, res: any) {
-  if (req.method === "POST") {
+  if (req.method === "GET") {
     db.collection("notifications").insertOne({
-      topicID: req.body.topicID,
-      name: req.body.name,
-      description: req.body.description,
-      mediaURL: req.body.mediaURL,
-      websiteURL: req.body.websiteURL,
+      topicID: req.query.topicID,
+      name: req.query.name,
+      description: req.query.description,
+      mediaURL: req.query.mediaURL,
+      websiteURL: req.query.websiteURL,
     });
     res.status(200).json({ success: true });
   } else {

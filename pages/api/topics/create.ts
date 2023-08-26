@@ -1,12 +1,12 @@
 import { db } from "@/utilities/mongo";
 
 export default function create(req: any, res: any) {
-  if (req.method === "POST") {
+  if (req.method === "GET") {
     db.collection("topics").insertOne({
-      name: req.body.name,
-      description: req.body.description,
-      websiteURL: req.body.websiteURL,
-      logoURL: req.body.logoURL,
+      name: req.query.name,
+      description: req.query.description,
+      websiteURL: req.query.websiteURL,
+      logoURL: req.query.logoURL,
     });
     res.status(200).json({ success: true });
   } else {

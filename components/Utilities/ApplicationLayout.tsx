@@ -49,7 +49,7 @@ interface Props {
 export default function ApplicationLayout({ children }: Props) {
   const router = useRouter();
   const wcSdk = useWalletConnect();
-  const [open, setOpen] = useState(true);
+  // const [open, setOpen] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [walletAddress, setWalletAddress] = useState<string>("");
 
@@ -57,31 +57,21 @@ export default function ApplicationLayout({ children }: Props) {
   useEffect(() => {
     // Check if user is logged in on page load
     if (wcSdk.isConnected()) {
-      console.log("user is logged in");
-      // console.log(wcSdk.getChainId());
       const address = wcSdk.getAccountAddress();
       if (address) {
         setWalletAddress(address);
-        console.log(address);
         if (walletAddress !== "") {
           getUserData();
         }
-        console.log("Test");
       }
-    } else {
-      // router.push("/");
-      // await wcSdk.connect("neo3:testnet", ["testInvoke"]);
-      console.log("User isn't logged in");
     }
   }, [walletAddress]);
 
   function getUserData() {
-    console.log("Get User Data Function", walletAddress);
     axios
       .get(`/api/users?walletAddress=${walletAddress}`)
       .then(function (response) {
         // handle success
-        console.log(response.data.userData);
         if (response.data.userData === null) {
           // Create user
           createUser();
@@ -95,12 +85,9 @@ export default function ApplicationLayout({ children }: Props) {
 
   function createUser() {
     axios
-      .post(`/api/users/create`, {
-        walletAddress: walletAddress,
-      })
+      .get(`/api/users/create?walletAddress=${walletAddress}`)
       .then(function (response) {
         // handle success
-        console.log(response.data.success);
       })
       .catch(function (error) {
         // handle error
@@ -176,7 +163,7 @@ export default function ApplicationLayout({ children }: Props) {
                         className="h-8 w-auto"
                         height={512}
                         width={512}
-                        src="/logo-white.png"
+                        src="/NEO_512_512.svg"
                         alt="NeoCast"
                       />
                     </div>
@@ -190,7 +177,7 @@ export default function ApplicationLayout({ children }: Props) {
                                   href={item.href}
                                   className={classNames(
                                     item.href === router.pathname
-                                      ? "bg-secondary-700 text-white"
+                                      ? "bg-primary-700 text-white"
                                       : "text-secondary-200 hover:text-white hover:bg-secondary-700",
                                     "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                                   )}
@@ -236,15 +223,20 @@ export default function ApplicationLayout({ children }: Props) {
         <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-secondary-600 pb-4">
-            <div className="flex h-24 shrink-0 items-center gap-x-4 px-6">
+            <div className="flex h-24 shrink-0 items-center gap-x-0 px-6">
               <Image
                 className="h-12 w-auto"
                 height={512}
                 width={512}
-                src="/logo-white.png"
+                src="/NEO_512_512.svg"
                 alt="NeoCast"
               />
-              <span className="font-black text-white text-2xl">NeoCast</span>
+              <span className="font-medium text-white text-3xl tracking-wide">
+                neo
+                <span className="ml-1 text-primary-600 uppercase text-2xl tracking-wider">
+                  CAST
+                </span>
+              </span>
             </div>
 
             <nav className="flex flex-1 flex-col">
@@ -268,16 +260,16 @@ export default function ApplicationLayout({ children }: Props) {
                           href={item.href}
                           className={classNames(
                             item.href === router.pathname
-                              ? "bg-secondary-700/80 text-white"
-                              : "text-secondary-200 hover:text-white hover:bg-secondary-700",
+                              ? "bg-primary-600 text-zinc-900"
+                              : "text-primary-200 hover:text-white hover:bg-primary-600",
                             "flex items-center group gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                           )}
                         >
                           <item.icon
                             className={classNames(
                               item.href === router.pathname
-                                ? "text-white"
-                                : "text-secondary-200 group-hover:text-white",
+                                ? "text-zinc-900"
+                                : "text-primary-200 group-hover:text-white",
                               "h-8 w-8 shrink-0"
                             )}
                             aria-hidden="true"
@@ -294,49 +286,112 @@ export default function ApplicationLayout({ children }: Props) {
         </div>
 
         <div className="lg:pl-72">
-          <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-end gap-x-4 border-b border-zinc-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
-            <button
-              type="button"
-              className="-m-2.5 p-2.5 text-zinc-700 lg:hidden"
-              onClick={() => setSidebarOpen(true)}
-            >
-              <span className="sr-only">Open sidebar</span>
-              <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-            </button>
-
-            {/* Separator */}
-            <div
-              className="h-6 w-px bg-zinc-900/10 lg:hidden"
-              aria-hidden="true"
-            />
-
-            <div className="flex items-center gap-x-4 lg:gap-x-6 xl:gap-x-2">
+          <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between lg:justify-end border-b border-zinc-200 bg-white shadow-sm  lg:px-8">
+            <div className="flex lg:hidden h-24 shrink-0 items-center gap-x-0 px-6">
+              <Image
+                className="h-12 w-auto"
+                height={512}
+                width={512}
+                src="/NEO_512_512.svg"
+                alt="NeoCast"
+              />
+              <span className="font-medium text-secondary-600 text-3xl tracking-wide">
+                neo
+                <span className="ml-1 text-primary-600 uppercase text-2xl tracking-wide">
+                  CAST
+                </span>
+              </span>
+            </div>
+            <div className="flex items-center px-4 gap-x-4 sm:gap-x-6 sm:px-6">
               <button
                 type="button"
-                className="-m-2.5 p-2.5 text-zinc-400 hover:text-zinc-500"
+                className="-m-2.5 p-2.5 text-zinc-700 lg:hidden"
+                onClick={() => setSidebarOpen(true)}
               >
-                <span className="sr-only">View notifications</span>
-                <BellIcon className="h-6 w-6" aria-hidden="true" />
+                <span className="sr-only">Open sidebar</span>
+                <Bars3Icon className="h-6 w-6" aria-hidden="true" />
               </button>
 
               {/* Separator */}
               <div
-                className="hidden lg:block lg:h-6 lg:w-px lg:bg-zinc-900/10"
+                className="h-6 w-px bg-zinc-900/10 lg:hidden"
                 aria-hidden="true"
               />
 
-              {/* Network dropdown */}
-              <Menu as="div" className="relative">
-                <Menu.Button className="-m-1.5 flex items-center p-1.5">
-                  <span className="sr-only">Open network menu</span>
-                  <Image
-                    className="h-12 w-auto"
-                    height={512}
-                    width={512}
-                    src="/NEO_512_512.svg"
-                    alt="NEO"
-                  />
-                  <span className="hidden lg:flex lg:items-center">
+              <div className="flex items-center gap-x-4 lg:gap-x-6 xl:gap-x-2">
+                <button
+                  type="button"
+                  className="-m-2.5 p-2.5 text-zinc-400 hover:text-zinc-500"
+                >
+                  <span className="sr-only">View notifications</span>
+                  <BellIcon className="h-6 w-6" aria-hidden="true" />
+                </button>
+
+                {/* Separator */}
+                <div
+                  className="hidden lg:block lg:h-6 lg:w-px lg:bg-zinc-900/10"
+                  aria-hidden="true"
+                />
+
+                {/* Network dropdown */}
+                <Menu as="div" className="relative hidden lg:block">
+                  <Menu.Button className="-m-1.5 flex items-center p-1.5">
+                    <span className="sr-only">Open network menu</span>
+                    <Image
+                      className="h-12 w-auto"
+                      height={512}
+                      width={512}
+                      src="/NEO_512_512.svg"
+                      alt="NEO"
+                      priority={true}
+                    />
+                    <span className="hidden lg:flex lg:items-center">
+                      <span
+                        className="ml-4 text-sm font-semibold leading-6 text-zinc-900"
+                        aria-hidden="true"
+                      >
+                        {walletAddress.slice(0, 4)}...
+                        {walletAddress.slice(walletAddress.length - 4)}
+                      </span>
+                      <ChevronDownIcon
+                        className="ml-2 h-5 w-5 text-zinc-400"
+                        aria-hidden="true"
+                      />
+                    </span>
+                  </Menu.Button>
+                  <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                  >
+                    <Menu.Items className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-zinc-900/5 focus:outline-none">
+                      <Menu.Item>
+                        <Link
+                          href={`/profile/${walletAddress}`}
+                          className="hover:bg-zinc-50 block px-3 py-1 text-sm leading-6 text-zinc-900"
+                        >
+                          NEO Testnet
+                        </Link>
+                      </Menu.Item>
+                      <Menu.Item>
+                        <Link
+                          href={`/profile/${walletAddress}`}
+                          className="hover:bg-zinc-50 block px-3 py-1 text-sm leading-6 text-zinc-900"
+                        >
+                          NEO Mainnet
+                        </Link>
+                      </Menu.Item>
+                    </Menu.Items>
+                  </Transition>
+                </Menu>
+
+                {/* User menu dropdown */}
+                <Menu as="div" className="relative">
+                  <Menu.Button className="-m-1.5 hidden lg:flex lg:items-center p-1.5">
                     <span
                       className="ml-4 text-sm font-semibold leading-6 text-zinc-900"
                       aria-hidden="true"
@@ -348,87 +403,42 @@ export default function ApplicationLayout({ children }: Props) {
                       className="ml-2 h-5 w-5 text-zinc-400"
                       aria-hidden="true"
                     />
-                  </span>
-                </Menu.Button>
-                <Transition
-                  as={Fragment}
-                  enter="transition ease-out duration-100"
-                  enterFrom="transform opacity-0 scale-95"
-                  enterTo="transform opacity-100 scale-100"
-                  leave="transition ease-in duration-75"
-                  leaveFrom="transform opacity-100 scale-100"
-                  leaveTo="transform opacity-0 scale-95"
-                >
-                  <Menu.Items className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-zinc-900/5 focus:outline-none">
-                    <Menu.Item>
-                      <Link
-                        href={`/profile/${walletAddress}`}
-                        className="hover:bg-zinc-50 block px-3 py-1 text-sm leading-6 text-zinc-900"
-                      >
-                        NEO Testnet
-                      </Link>
-                    </Menu.Item>
-                    <Menu.Item>
-                      <Link
-                        href={`/profile/${walletAddress}`}
-                        className="hover:bg-zinc-50 block px-3 py-1 text-sm leading-6 text-zinc-900"
-                      >
-                        NEO Mainnet
-                      </Link>
-                    </Menu.Item>
-                  </Menu.Items>
-                </Transition>
-              </Menu>
-
-              {/* User menu dropdown */}
-              <Menu as="div" className="relative">
-                <Menu.Button className="-m-1.5 hidden lg:flex lg:items-center p-1.5">
-                  <span
-                    className="ml-4 text-sm font-semibold leading-6 text-zinc-900"
-                    aria-hidden="true"
+                  </Menu.Button>
+                  <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
                   >
-                    {walletAddress.slice(0, 4)}...
-                    {walletAddress.slice(walletAddress.length - 4)}
-                  </span>
-                  <ChevronDownIcon
-                    className="ml-2 h-5 w-5 text-zinc-400"
-                    aria-hidden="true"
-                  />
-                </Menu.Button>
-                <Transition
-                  as={Fragment}
-                  enter="transition ease-out duration-100"
-                  enterFrom="transform opacity-0 scale-95"
-                  enterTo="transform opacity-100 scale-100"
-                  leave="transition ease-in duration-75"
-                  leaveFrom="transform opacity-100 scale-100"
-                  leaveTo="transform opacity-0 scale-95"
-                >
-                  <Menu.Items className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-zinc-900/5 focus:outline-none">
-                    <Menu.Item>
-                      <Link
-                        href={`/profile/${walletAddress}`}
-                        className="hover:bg-zinc-50 block px-3 py-1 text-sm leading-6 text-zinc-900"
-                      >
-                        {walletAddress.slice(0, 4)}...
-                        {walletAddress.slice(walletAddress.length - 4)}
-                      </Link>
-                    </Menu.Item>
-                    <Menu.Item>
-                      <span
-                        onClick={() => signOut()}
-                        className="cursor-pointer hover:bg-zinc-50 block px-3 py-1 text-sm leading-6 text-zinc-900"
-                      >
-                        Disconnect
-                      </span>
-                    </Menu.Item>
-                  </Menu.Items>
-                </Transition>
-              </Menu>
+                    <Menu.Items className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-zinc-900/5 focus:outline-none">
+                      <Menu.Item>
+                        <Link
+                          href={`/profile/${walletAddress}`}
+                          className="hover:bg-zinc-50 block px-3 py-1 text-sm leading-6 text-zinc-900"
+                        >
+                          {walletAddress.slice(0, 4)}...
+                          {walletAddress.slice(walletAddress.length - 4)}
+                        </Link>
+                      </Menu.Item>
+                      <Menu.Item>
+                        <span
+                          onClick={() => signOut()}
+                          className="cursor-pointer hover:bg-zinc-50 block px-3 py-1 text-sm leading-6 text-zinc-900"
+                        >
+                          Disconnect
+                        </span>
+                      </Menu.Item>
+                    </Menu.Items>
+                  </Transition>
+                </Menu>
+              </div>
             </div>
           </div>
 
-          <main className="py-10">
+          <main className="py-3 lg:py-10">
             <div className="px-4 sm:px-6 lg:px-8 xl:px-12">{children}</div>
           </main>
         </div>

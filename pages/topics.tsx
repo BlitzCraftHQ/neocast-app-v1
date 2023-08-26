@@ -24,16 +24,9 @@ export default function Channels() {
 
   // Check if user is logged in
   useEffect(() => {
-    // Check if user is logged in on page load
     if (wcSdk.isConnected()) {
-      // console.log(wcSdk.getAccountAddress());
-      // console.log(wcSdk.getChainId());
       setWalletAddress(wcSdk.getAccountAddress());
       getUserData();
-    } else {
-      // router.push("/");
-      // await wcSdk.connect("neo3:testnet", ["testInvoke"]);
-      console.log("User isn't logged in");
     }
   }, [walletAddress]);
 
@@ -42,7 +35,6 @@ export default function Channels() {
       .get("/api/topics")
       .then(function (response) {
         // handle success
-        // console.log(response);
         setTopics(response.data.topics);
       })
       .catch(function (error) {
@@ -59,7 +51,6 @@ export default function Channels() {
       .get(`/api/users?walletAddress=${walletAddress}`)
       .then(function (response) {
         // handle success
-        // console.log(response.data.userData.subscribedTopics);
         setSubscribedTopics(response.data.userData.subscribedTopics);
         getTopics();
       })
@@ -72,26 +63,21 @@ export default function Channels() {
   function optToggle(id: (_id: any) => void) {
     const opt = subscribedTopics.includes(id) ? "out" : "in";
     axios
-      .put("/api/topics/opt", {
-        topicID: id,
-        walletAddress: walletAddress,
-        action: opt,
-      })
+      .get(
+        `/api/topics/opt?topicID=${id}&walletAddress=${walletAddress}&action=${opt}`
+      )
       .then(function (response) {
-        // console.log(response);
         if (response.data.success) {
           if (opt === "in") {
             setSubscribedTopics([
               ...subscribedTopics, // that contains all the old items
               id,
             ]);
-            // console.log(subscribedTopics);
           } else {
             let updatedSubscibedTopics = subscribedTopics.filter(
               (topicID: (_id: any) => void) => topicID !== id
             );
             setSubscribedTopics(updatedSubscibedTopics);
-            // console.log(subscribedTopics);
           }
         }
       })
@@ -181,73 +167,82 @@ export default function Channels() {
           </p>
           <div className="mt-5">
             <ul role="list" className="divide-y divide-zinc-200">
-              {topics.map(
-                (
-                  topic: {
-                    _id(_id: any): void;
-                    logoURL: string | undefined;
-                    websiteURL: string | undefined;
-                    name:
-                      | string
-                      | number
-                      | boolean
-                      | ReactElement<any, string | JSXElementConstructor<any>>
-                      | ReactFragment
-                      | ReactPortal
-                      | PromiseLikeOfReactNode
-                      | null
-                      | undefined;
-                    description:
-                      | string
-                      | number
-                      | boolean
-                      | ReactElement<any, string | JSXElementConstructor<any>>
-                      | ReactFragment
-                      | ReactPortal
-                      | PromiseLikeOfReactNode
-                      | null
-                      | undefined;
-                  },
-                  index: Key | null | undefined
-                ) => (
-                  <li key={index} className="flex justify-between gap-x-6 py-5">
-                    <div className="flex min-w-0 gap-x-4">
-                      <img
-                        className="h-24 w-24 flex-none rounded-xl bg-zinc-50"
-                        src={topic.logoURL}
-                        alt="Channel Logo"
-                      />
-                      <div className="min-w-0 flex-auto">
-                        <p className="text-xl font-semibold leading-6 text-zinc-900">
-                          {topic.name}
-                        </p>
-                        <p className="mt-2 truncate text-sm font-medium leading-5 text-zinc-500 max-w-prose whitespace-normal">
-                          {topic.description}
-                        </p>
-                        <div className="mt-5 flex gap-x-5">
-                          <Link
-                            href={topic.websiteURL || ""}
-                            target="_blank"
-                            className="inline-flex items-center rounded-full bg-zinc-100 px-2 py-1 text-xs font-medium text-zinc-600 ring-1 ring-inset ring-zinc-500/10"
-                          >
-                            {topic.websiteURL}
-                          </Link>
+              {topics.length > 0 ? (
+                topics.map(
+                  (
+                    topic: {
+                      _id(_id: any): void;
+                      logoURL: string | undefined;
+                      websiteURL: string | undefined;
+                      name:
+                        | string
+                        | number
+                        | boolean
+                        | ReactElement<any, string | JSXElementConstructor<any>>
+                        | ReactFragment
+                        | ReactPortal
+                        | PromiseLikeOfReactNode
+                        | null
+                        | undefined;
+                      description:
+                        | string
+                        | number
+                        | boolean
+                        | ReactElement<any, string | JSXElementConstructor<any>>
+                        | ReactFragment
+                        | ReactPortal
+                        | PromiseLikeOfReactNode
+                        | null
+                        | undefined;
+                    },
+                    index: Key | null | undefined
+                  ) => (
+                    <li
+                      key={index}
+                      className="flex justify-between gap-x-6 py-5"
+                    >
+                      <div className="flex min-w-0 gap-x-4">
+                        <img
+                          className="h-24 w-24 flex-none rounded-xl bg-zinc-50"
+                          src={topic.logoURL}
+                          alt="Channel Logo"
+                        />
+                        <div className="min-w-0 flex-auto">
+                          <p className="text-xl font-semibold leading-6 text-zinc-900">
+                            {topic.name}
+                          </p>
+                          <p className="mt-2 truncate text-sm font-medium leading-5 text-zinc-500 max-w-prose whitespace-normal line-clamp-2">
+                            {topic.description}
+                          </p>
+                          <div className="mt-5 flex gap-x-5">
+                            <Link
+                              href={topic.websiteURL || ""}
+                              target="_blank"
+                              className="inline-flex items-center rounded-full bg-zinc-100 px-2 py-1 text-xs font-medium text-zinc-600 ring-1 ring-inset ring-zinc-500/10"
+                            >
+                              {topic.websiteURL}
+                            </Link>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="hidden shrink-0 sm:flex sm:flex-col sm:items-end justify-center">
-                      <button
-                        type="button"
-                        onClick={() => optToggle(topic._id)}
-                        className="rounded-md bg-secondary-600 px-8 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-secondary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary-600"
-                      >
-                        {subscribedTopics.includes(topic._id)
-                          ? "Opt Out"
-                          : "Opt In"}
-                      </button>
-                    </div>
-                  </li>
+                      <div className="hidden shrink-0 sm:flex sm:flex-col sm:items-end justify-center">
+                        <button
+                          type="button"
+                          onClick={() => optToggle(topic._id)}
+                          className="rounded-md bg-primary-600 px-8 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+                        >
+                          {subscribedTopics.includes(topic._id)
+                            ? "Opt Out"
+                            : "Opt In"}
+                        </button>
+                      </div>
+                    </li>
+                  )
                 )
+              ) : (
+                <div className="my-12 flex justify-center gap-x-3">
+                  Loading topics...
+                </div>
               )}
             </ul>
           </div>

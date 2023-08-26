@@ -18,6 +18,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/contact.jsx", "components/Index/BetaSignUp.jsx", "pages/api/topics/create.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/contact.jsx", "components/Index/BetaSignUp.jsx", "pages/api/topics/create.ts", "pages/api/all-apis"],
   "exclude": ["node_modules"]
 }

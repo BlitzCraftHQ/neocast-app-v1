@@ -35,12 +35,9 @@ export default function CreateTopic() {
     setShowFailed(false);
 
     axios
-      .post("/api/topics/create", {
-        name: inputs.name,
-        description: inputs.description,
-        websiteURL: inputs.websiteURL,
-        logoURL: inputs.logoURL,
-      })
+      .get(
+        `/api/topics/create?name=${inputs.name}&description=${inputs.description}&websiteURL=${inputs.websiteURL}&logoURL=${inputs.logoURL}`
+      )
       .then(function (response) {
         console.log(response);
         // Show submission success
@@ -243,7 +240,7 @@ export default function CreateTopic() {
               <div className="flex justify-end">
                 <button
                   type="submit"
-                  className={`rounded-md bg-secondary-600 px-8 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-secondary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary-600" ${
+                  className={`rounded-md bg-primary-600 px-8 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600" ${
                     Loading && "opacity-50 cursor-progress"
                   }`}
                   disabled={Loading}

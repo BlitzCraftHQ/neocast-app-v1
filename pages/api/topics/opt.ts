@@ -1,10 +1,10 @@
 import { db } from "@/utilities/mongo";
 
 export default async function opt(req: any, res: any) {
-  if (req.method === "PUT") {
-    const walletAddress = req.body.walletAddress;
-    const topicID = req.body.topicID;
-    const opt = req.body.action;
+  if (req.method === "GET") {
+    const walletAddress = req.query.walletAddress;
+    const topicID = req.query.topicID;
+    const opt = req.query.action;
     console.log(walletAddress, topicID);
     opt === "in"
       ? db

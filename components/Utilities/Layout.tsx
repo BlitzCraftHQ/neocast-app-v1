@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 import { Disclosure } from "@headlessui/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -33,23 +33,7 @@ export default function Layout({ children }: Props) {
     } else {
       wcSdk.isConnected() && router.push("/topics");
     }
-    // if (wcSdk.isConnected()) {
-    //   console.log(wcSdk.getAccountAddress());
-    //   console.log(wcSdk.getChainId());
-    //   console.log(wcSdk.session?.namespaces);
-    //   console.log(wcSdk.session?.peer.metadata);
-    //   router.push("/topics");
-    // }
   }
-
-  // useEffect(() => {
-  //   if (wcSdk.isConnected()) {
-  //     console.log(wcSdk.getAccountAddress());
-  //     console.log(wcSdk.getChainId());
-  //     console.log(wcSdk.session?.namespaces);
-  //     console.log(wcSdk.session?.peer.metadata);
-  //   }
-  // });
 
   return (
     <>
@@ -57,29 +41,27 @@ export default function Layout({ children }: Props) {
         <div className="fixed w-full top-0 z-10">
           <Disclosure
             as="nav"
-            className="border-b border-secondary-600 border-opacity-25 bg-gradient-to-r from-primary-900/50 to-secondary-900/50 lg:border-none"
+            className="border-b border-secondary-600 border-opacity-25 bg-gradient-to-r from-secondary-900/50 to-primary-900/50 lg:border-none"
           >
             {() => (
               <>
                 <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
                   <div className="relative flex h-24 items-center justify-between">
                     <div className="flex items-center px-2 lg:px-0">
-                      <div className="flex-shrink-0 flex items-center gap-x-3">
+                      <div className="flex-shrink-0 flex items-center">
                         <Image
-                          className="block h-12 w-12"
-                          height={1109}
-                          width={1115}
-                          src="/logo/color.svg"
+                          className="h-12 w-auto"
+                          height={512}
+                          width={512}
+                          src="/NEO_512_512.svg"
                           alt="NeoCast"
                         />
-                        <div>
-                          <div className="font-black text-white text-3xl">
-                            NeoCast
-                          </div>
-                          <div className="text-zinc-400 text-xs font-semibold">
-                            by BlitzCraft Labs
-                          </div>
-                        </div>
+                        <span className="font-medium text-white text-3xl tracking-wide">
+                          neo
+                          <span className="ml-1 text-primary-600 uppercase text-2xl tracking-wider">
+                            CAST
+                          </span>
+                        </span>
                       </div>
                       <div className="hidden lg:ml-10 lg:block">
                         <div className="flex space-x-4">
@@ -115,7 +97,7 @@ export default function Layout({ children }: Props) {
           </Disclosure>
         </div>
 
-        <div className="h-24 bg-gradient-to-r from-primary-900 to-secondary-900" />
+        <div className="h-24 bg-gradient-to-r from-secondary-900 to-primary-900" />
         <main>{children}</main>
 
         <Footer />

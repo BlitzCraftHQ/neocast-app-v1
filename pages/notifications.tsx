@@ -15,26 +15,20 @@ import Link from "next/link";
 import axios from "axios";
 import { useWalletConnect } from "@cityofzion/wallet-connect-sdk-react";
 import { UrlObject } from "url";
-import { LinkIcon } from "@heroicons/react/24/outline";
+import { InformationCircleIcon, LinkIcon } from "@heroicons/react/24/outline";
 import ApplicationLayout from "@/components/Utilities/ApplicationLayout";
 
 export default function Notifications() {
   const wcSdk = useWalletConnect();
   const [notifications, setNotifications] = useState<any>([]);
   const [walletAddress, setWalletAddress] = useState<any>("");
+  const [loading, setLoading] = useState<boolean>(true);
 
   // Check if user is logged in
   useEffect(() => {
-    // Check if user is logged in on page load
     if (wcSdk.isConnected()) {
-      // console.log(wcSdk.getAccountAddress());
-      // console.log(wcSdk.getChainId());
       setWalletAddress(wcSdk.getAccountAddress());
       getNotifications();
-    } else {
-      // router.push("/");
-      // await wcSdk.connect("neo3:testnet", ["testInvoke"]);
-      console.log("User isn't logged in");
     }
   }, [walletAddress]);
 
@@ -43,8 +37,8 @@ export default function Notifications() {
       .get(`/api/notifications?walletAddress=${walletAddress}`)
       .then(function (response) {
         // handle success
-        // console.log(response);
         setNotifications(response.data.notifications);
+        setLoading(false);
       })
       .catch(function (error) {
         // handle error
@@ -118,84 +112,122 @@ export default function Notifications() {
           </p>
           <div className="mt-5">
             <ul role="list">
-              {notifications.map(
-                (
-                  notification: {
-                    topicData: any;
-                    mediaURL: string | undefined;
-                    topicLogoURL: string | undefined;
-                    topicName:
-                      | string
-                      | number
-                      | boolean
-                      | ReactElement<any, string | JSXElementConstructor<any>>
-                      | ReactFragment
-                      | ReactPortal
-                      | PromiseLikeOfReactNode
-                      | null
-                      | undefined;
-                    websiteURL: string | UrlObject;
-                    name:
-                      | string
-                      | number
-                      | boolean
-                      | ReactElement<any, string | JSXElementConstructor<any>>
-                      | ReactFragment
-                      | ReactPortal
-                      | PromiseLikeOfReactNode
-                      | null
-                      | undefined;
-                    description:
-                      | string
-                      | number
-                      | boolean
-                      | ReactElement<any, string | JSXElementConstructor<any>>
-                      | ReactFragment
-                      | ReactPortal
-                      | PromiseLikeOfReactNode
-                      | null
-                      | undefined;
-                  },
-                  index: Key | null | undefined
-                ) => (
-                  <li key={index} className="my-3">
-                    <div className="border border-zinc-200 rounded-xl">
-                      <div className="flex items-center justify-between px-5 py-2">
-                        <div className="flex items-center gap-x-3">
-                          <img
-                            className="h-8 w-8 flex-none rounded-full bg-zinc-50"
-                            src={notification.topicData.logoURL}
-                            alt="Channel Logo"
-                          />
-                          <div className="text-sm font-semibold leading-6 text-zinc-900">
-                            {notification.topicData.name}
+              {loading ? (
+                <div className="my-12 flex justify-center gap-x-3">
+                  Loading notifications...
+                </div>
+              ) : notifications.length > 0 ? (
+                notifications.map(
+                  (
+                    notification: {
+                      notification: any;
+                      topicData: any;
+                      mediaURL: string | undefined;
+                      topicLogoURL: string | undefined;
+                      topicName:
+                        | string
+                        | number
+                        | boolean
+                        | ReactElement<any, string | JSXElementConstructor<any>>
+                        | ReactFragment
+                        | ReactPortal
+                        | PromiseLikeOfReactNode
+                        | null
+                        | undefined;
+                      websiteURL: string | UrlObject;
+                      name:
+                        | string
+                        | number
+                        | boolean
+                        | ReactElement<any, string | JSXElementConstructor<any>>
+                        | ReactFragment
+                        | ReactPortal
+                        | PromiseLikeOfReactNode
+                        | null
+                        | undefined;
+                      description:
+                        | string
+                        | number
+                        | boolean
+                        | ReactElement<any, string | JSXElementConstructor<any>>
+                        | ReactFragment
+                        | ReactPortal
+                        | PromiseLikeOfReactNode
+                        | null
+                        | undefined;
+                    },
+                    index: Key | null | undefined
+                  ) => (
+                    <li key={index} className="my-3">
+                      <div className="border border-zinc-200 rounded-xl">
+                        <div className="flex items-center justify-between px-5 py-2">
+                          <div className="flex items-center gap-x-3">
+                            <img
+                              className="h-8 w-8 flex-none rounded-full bg-zinc-50"
+                              src={notification.topicData.logoURL}
+                              alt="Channel Logo"
+                            />
+                            <div className="text-sm font-semibold leading-6 text-zinc-900">
+                              {notification.topicData.name}
+                            </div>
+                          </div>
+                          <Link
+                            href={notification.topicData.websiteURL}
+                            target="_blank"
+                            passHref={true}
+                            className="text-xs font-semibold text-zinc-500"
+                          >
+                            View In App
+                          </Link>
+                        </div>
+                        <div className="border-t border-zinc-200 px-5 pt-3 pb-5">
+                          <div className="flex items-center gap-x-2 font-bold text-xl text-zinc-900">
+                            <span>{notification.notification.name}</span>
+                            <LinkIcon className="h-4 w-4" aria-hidden="true" />
+                          </div>
+                          <div className="mt-5 text-sm text-zinc-700">
+                            {notification.notification.description}
+                          </div>
+                          <div className="mt-5">
+                            <img
+                              src={notification.notification.mediaURL}
+                              className="w-full h-auto rounded-lg"
+                            />
                           </div>
                         </div>
-                        <Link
-                          href={notification.topicData.websiteURL}
-                          className="text-xs font-semibold text-zinc-500"
-                        >
-                          View In App
-                        </Link>
                       </div>
-                      <div className="border-t border-zinc-200 px-5 pt-3 pb-5">
-                        <div className="flex items-center gap-x-2 font-bold text-xl text-zinc-900">
-                          <span>{notification.name}</span>
-                          <LinkIcon className="h-4 w-4" aria-hidden="true" />
-                        </div>
-                        <div className="mt-5 text-sm text-zinc-700">
-                          {notification.description}
-                        </div>
-                        <div className="mt-5">
-                          <img
-                            src={notification.mediaURL}
-                            className="w-full h-auto rounded-lg"
-                          />
-                        </div>
+                    </li>
+                  )
+                )
+              ) : (
+                <div className="my-12">
+                  <div className="rounded-md bg-blue-50 p-4">
+                    <div className="flex">
+                      <div className="flex-shrink-0">
+                        <InformationCircleIcon
+                          className="h-5 w-5 text-blue-400"
+                          aria-hidden="true"
+                        />
+                      </div>
+                      <div className="ml-3 flex-1 md:flex md:justify-between">
+                        <p className="text-sm text-blue-700">
+                          You don&apos;t have any notifications. Please opt in
+                          on topics you like and you&apos;ll start seeing
+                          notifications here.
+                        </p>
+                        <p className="mt-3 text-sm md:ml-6 md:mt-0">
+                          <Link
+                            href="/topics"
+                            className="whitespace-nowrap font-medium text-blue-700 hover:text-blue-600"
+                          >
+                            Topics
+                            <span aria-hidden="true"> &rarr;</span>
+                          </Link>
+                        </p>
                       </div>
                     </div>
-                  </li>
-                )
+                  </div>
+                </div>
               )}
             </ul>
           </div>

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export default function Hero() {
@@ -5,7 +6,7 @@ export default function Hero() {
     <>
       <div
         id="hero"
-        className="isolate bg-gradient-to-r from-primary-900 to-secondary-900 overflow-hidden"
+        className="isolate bg-gradient-to-r from-secondary-900 to-primary-900 overflow-hidden"
       >
         <svg
           className="absolute inset-x-0 top-0 -z-10 h-[64rem] w-full stroke-zinc-100/20 [mask-image:radial-gradient(32rem_32rem_at_center,white,transparent)]"
@@ -45,7 +46,7 @@ export default function Hero() {
           aria-hidden="true"
         >
           <div
-            className="aspect-[801/1036] w-[50.0625rem] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30"
+            className="aspect-[801/1036] w-[50.0625rem] bg-gradient-to-tr from-[#00004C] to-[#0FFFAF] opacity-30"
             style={{
               clipPath:
                 "polygon(63.1% 29.5%, 100% 17.1%, 76.6% 3%, 48.4% 0%, 44.6% 4.7%, 54.5% 25.3%, 59.8% 49%, 55.2% 57.8%, 44.4% 57.2%, 27.8% 47.9%, 35.1% 81.5%, 0% 97.7%, 39.2% 100%, 35.2% 81.4%, 97.2% 52.8%, 63.1% 29.5%)",
@@ -71,7 +72,7 @@ export default function Hero() {
                   <Link
                     href="#sign-up"
                     scroll={false}
-                    className="rounded-md bg-secondary-600 shadow-[0px_0px_40px_30px_#e5167024] px-12 py-4 text-xl font-semibold text-white hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 transition-all ease-in-out duration-200"
+                    className="rounded-md bg-primary-600 shadow-[0px_0px_40px_30px_#C6FFEC24] px-12 py-4 text-xl font-semibold text-white hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 transition-all ease-in-out duration-200"
                   >
                     Launch dApp
                   </Link>
@@ -103,9 +104,11 @@ export default function Hero() {
                     transform="translate(24 24)"
                     clipPath="url(#2ade4387-9c63-4fc4-b754-10e687a0d332)"
                   >
-                    <img
-                      src="https://tailwindui.com/img/component-images/mobile-app-screenshot.png"
-                      alt=""
+                    <Image
+                      src="/hero.png"
+                      height={1368}
+                      width={632}
+                      alt="iPhone"
                     />
                   </foreignObject>
                 </svg>

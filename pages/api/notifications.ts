@@ -53,7 +53,7 @@ export default async function notifications(req: any, res: any) {
     ];
 
     const result = await db
-      .collection("notifications")
+      .collection("users")
       // .find({ topicID: { $in: subscribedTopics } })
       .aggregate(pipeline)
       .toArray();
