@@ -14,6 +14,7 @@ export default function CreateTopic() {
     description: "",
     websiteURL: "",
     logoURL: "",
+    webhookURL: "",
   });
 
   const handleInput = (event: {
@@ -36,7 +37,7 @@ export default function CreateTopic() {
 
     axios
       .get(
-        `/api/topics/create?name=${inputs.name}&description=${inputs.description}&websiteURL=${inputs.websiteURL}&logoURL=${inputs.logoURL}`
+        `/api/topics/create?name=${inputs.name}&description=${inputs.description}&websiteURL=${inputs.websiteURL}&logoURL=${inputs.logoURL}&webhookURL=${inputs.webhookURL}`
       )
       .then(function (response) {
         console.log(response);
@@ -49,6 +50,7 @@ export default function CreateTopic() {
           description: "",
           websiteURL: "",
           logoURL: "",
+          webhookURL: "",
         });
       })
       .catch(function (error) {
@@ -202,6 +204,26 @@ export default function CreateTopic() {
                   placeholder="https://piedpiper.com/logo.png"
                 />
               </div>
+
+              <div className="rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-zinc-300 focus-within:ring-2 focus-within:ring-secondary-600">
+                <label
+                  htmlFor="webhookURL"
+                  className="block text-xs font-medium text-zinc-900"
+                >
+                  Webhook URL
+                </label>
+                <input
+                  type="text"
+                  name="webhookURL"
+                  id="webhookURL"
+                  required={true}
+                  onChange={handleInput}
+                  value={inputs.webhookURL}
+                  className="block w-full border-0 p-0 text-zinc-900 placeholder:text-zinc-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  placeholder="https://discord.com/api/webhooks/iwvngowiry924yg9374yg94gby..."
+                />
+              </div>
+
               {showSuccess && (
                 <div className="mt-6 sm:col-span-2 rounded-md bg-green-600 px-4 py-3">
                   <div className="flex">

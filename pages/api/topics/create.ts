@@ -7,6 +7,7 @@ export default function create(req: any, res: any) {
       description: req.query.description,
       websiteURL: req.query.websiteURL,
       logoURL: req.query.logoURL,
+      webhookURL: req.query.webhookURL,
     });
     res.status(200).json({ success: true });
   } else {
