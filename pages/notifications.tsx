@@ -37,6 +37,7 @@ export default function Notifications() {
       .get(`/api/notifications?walletAddress=${walletAddress}`)
       .then(function (response) {
         // handle success
+        console.log(response.data.notifications);
         setNotifications(response.data.notifications);
         setLoading(false);
       })

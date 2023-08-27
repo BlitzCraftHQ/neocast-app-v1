@@ -56,6 +56,7 @@ export default async function notifications(req: any, res: any) {
       .collection("users")
       // .find({ topicID: { $in: subscribedTopics } })
       .aggregate(pipeline)
+      // .sort({ _id: 1 })
       .toArray();
     res.status(200).json({ notifications: result });
   } else {
