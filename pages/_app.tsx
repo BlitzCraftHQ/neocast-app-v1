@@ -7,7 +7,6 @@ import "@rainbow-me/rainbowkit/styles.css";
 
 import {
   connectorsForWallets,
-  darkTheme,
   RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
