@@ -129,7 +129,7 @@ export default function CreateTopic() {
 
           <div className="mt-8">
             <form className="space-y-8" onSubmit={handleSubmit}>
-              <div className="rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-zinc-300 focus-within:ring-2 focus-within:ring-secondary-600">
+              <div className="rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-zinc-300 focus-within:ring-2 focus-within:ring-primary-600">
                 <label
                   htmlFor="name"
                   className="block text-xs font-medium text-zinc-900"
@@ -148,7 +148,7 @@ export default function CreateTopic() {
                 />
               </div>
 
-              <div className="rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-zinc-300 focus-within:ring-2 focus-within:ring-secondary-600">
+              <div className="rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-zinc-300 focus-within:ring-2 focus-within:ring-primary-600">
                 <label
                   htmlFor="description"
                   className="block text-xs font-medium text-zinc-900"
@@ -167,7 +167,7 @@ export default function CreateTopic() {
                 />
               </div>
 
-              <div className="rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-zinc-300 focus-within:ring-2 focus-within:ring-secondary-600">
+              <div className="rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-zinc-300 focus-within:ring-2 focus-within:ring-primary-600">
                 <label
                   htmlFor="websiteURL"
                   className="block text-xs font-medium text-zinc-900"
@@ -186,7 +186,7 @@ export default function CreateTopic() {
                 />
               </div>
 
-              <div className="rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-zinc-300 focus-within:ring-2 focus-within:ring-secondary-600">
+              <div className="rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-zinc-300 focus-within:ring-2 focus-within:ring-primary-600">
                 <label
                   htmlFor="logoURL"
                   className="block text-xs font-medium text-zinc-900"
@@ -205,7 +205,7 @@ export default function CreateTopic() {
                 />
               </div>
 
-              <div className="rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-zinc-300 focus-within:ring-2 focus-within:ring-secondary-600">
+              <div className="rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-zinc-300 focus-within:ring-2 focus-within:ring-primary-600">
                 <label
                   htmlFor="webhookURL"
                   className="block text-xs font-medium text-zinc-900"

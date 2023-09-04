@@ -14,20 +14,26 @@ import Head from "next/head";
 import Link from "next/link";
 import axios from "axios";
 import { useWalletConnect } from "@cityofzion/wallet-connect-sdk-react";
+import { useAccount } from "wagmi";
 import { UrlObject } from "url";
 import { InformationCircleIcon, LinkIcon } from "@heroicons/react/24/outline";
 import ApplicationLayout from "@/components/Utilities/ApplicationLayout";
 
 export default function Notifications() {
   const wcSdk = useWalletConnect();
+  const { address: NeonEVMAddress } = useAccount();
   const [notifications, setNotifications] = useState<any>([]);
   const [walletAddress, setWalletAddress] = useState<any>("");
   const [loading, setLoading] = useState<boolean>(true);
 
   // Check if user is logged in
   useEffect(() => {
-    if (wcSdk.isConnected()) {
+    if (wcSdk.isConnected() && NeonEVMAddress === undefined) {
       setWalletAddress(wcSdk.getAccountAddress());
+      getNotifications();
+    }
+    if (!wcSdk.isConnected() && NeonEVMAddress !== undefined) {
+      setWalletAddress(NeonEVMAddress);
       getNotifications();
     }
   }, [walletAddress]);

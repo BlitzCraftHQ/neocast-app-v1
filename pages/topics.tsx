@@ -14,23 +14,30 @@ import Link from "next/link";
 import axios from "axios";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useWalletConnect } from "@cityofzion/wallet-connect-sdk-react";
+import { useAccount } from "wagmi";
 import ApplicationLayout from "@/components/Utilities/ApplicationLayout";
 
 export default function Channels() {
   const wcSdk = useWalletConnect();
+  const { address: NeonEVMAddress } = useAccount();
   const [topics, setTopics] = useState<any>([]);
   const [subscribedTopics, setSubscribedTopics] = useState<any>([]);
   const [walletAddress, setWalletAddress] = useState<any>("");
 
   // Check if user is logged in
   useEffect(() => {
-    if (wcSdk.isConnected()) {
+    if (wcSdk.isConnected() && NeonEVMAddress === undefined) {
       setWalletAddress(wcSdk.getAccountAddress());
+      getUserData();
+    }
+    if (!wcSdk.isConnected() && NeonEVMAddress !== undefined) {
+      setWalletAddress(NeonEVMAddress);
       getUserData();
     }
   }, [walletAddress]);
 
   function getTopics() {
+    console.log("Called get topics");
     axios
       .get("/api/topics")
       .then(function (response) {
@@ -47,10 +54,13 @@ export default function Channels() {
   }
 
   function getUserData() {
+    console.log("Called getUserData");
     axios
       .get(`/api/users?walletAddress=${walletAddress}`)
       .then(function (response) {
+        console.log("Printing response");
         // handle success
+        console.log(response.data.userData.subscribedTopics);
         setSubscribedTopics(response.data.userData.subscribedTopics);
         getTopics();
       })
@@ -154,7 +164,7 @@ export default function Channels() {
               type="text"
               name="account-number"
               id="account-number"
-              className="block w-full rounded-xl border-0 py-3.5 pl-12 text-zinc-900 ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-secondary-600 sm:text-sm font-semibold sm:leading-6"
+              className="block w-full rounded-xl border-0 py-3.5 pl-12 text-zinc-900 ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm font-semibold sm:leading-6"
               placeholder="Search by name or 0xb34r"
             />
           </div>

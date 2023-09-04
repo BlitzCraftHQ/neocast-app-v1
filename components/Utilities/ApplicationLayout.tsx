@@ -3,9 +3,8 @@ import { Dialog, Menu, Transition } from "@headlessui/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useWalletConnect } from "@cityofzion/wallet-connect-sdk-react";
+import axios from "axios";
 import {
-  ArrowPathIcon,
   Bars3Icon,
   BellAlertIcon,
   BellIcon,
@@ -15,7 +14,8 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import axios from "axios";
+import { useWalletConnect } from "@cityofzion/wallet-connect-sdk-react";
+import { useAccount, useDisconnect } from "wagmi";
 
 const navigation = [
   {
@@ -47,6 +47,13 @@ interface Props {
 }
 
 export default function ApplicationLayout({ children }: Props) {
+  const { address: NeonEVMAddress } = useAccount();
+  const { disconnect } = useDisconnect({
+    onSuccess() {
+      localStorage.clear();
+      router.push("/");
+    },
+  });
   const router = useRouter();
   const wcSdk = useWalletConnect();
   // const [open, setOpen] = useState(true);
@@ -55,9 +62,18 @@ export default function ApplicationLayout({ children }: Props) {
 
   // Check if user is logged in
   useEffect(() => {
-    // Check if user is logged in on page load
+    // Check if user is logged in to Neon wallet on page load
     if (wcSdk.isConnected()) {
       const address = wcSdk.getAccountAddress();
+      if (address) {
+        setWalletAddress(address);
+        if (walletAddress !== "") {
+          getUserData();
+        }
+      }
+    }
+    if (NeonEVMAddress !== null) {
+      const address = NeonEVMAddress;
       if (address) {
         setWalletAddress(address);
         if (walletAddress !== "") {
@@ -96,9 +112,11 @@ export default function ApplicationLayout({ children }: Props) {
   }
 
   async function signOut() {
-    await wcSdk.disconnect().then(() => {
-      router.push("/");
-    });
+    NeonEVMAddress === null
+      ? await wcSdk.disconnect().then(() => {
+          router.push("/");
+        })
+      : disconnect();
   }
 
   return (
@@ -157,7 +175,7 @@ export default function ApplicationLayout({ children }: Props) {
                     </div>
                   </Transition.Child>
                   {/* Sidebar component, swap this element with another sidebar if you like */}
-                  <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-secondary-600 px-6 pb-4">
+                  <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-primary-50 px-6 pb-4">
                     <div className="flex h-16 shrink-0 items-center">
                       <Image
                         className="h-8 w-auto"
@@ -178,7 +196,7 @@ export default function ApplicationLayout({ children }: Props) {
                                   className={classNames(
                                     item.href === router.pathname
                                       ? "bg-primary-700 text-white"
-                                      : "text-secondary-200 hover:text-white hover:bg-secondary-700",
+                                      : "text-primary-200 hover:text-white hover:bg-primary-700",
                                     "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                                   )}
                                 >
@@ -186,7 +204,7 @@ export default function ApplicationLayout({ children }: Props) {
                                     className={classNames(
                                       item.href === router.pathname
                                         ? "text-white"
-                                        : "text-secondary-200 group-hover:text-white",
+                                        : "text-primary-200 group-hover:text-white",
                                       "h-6 w-6 shrink-0"
                                     )}
                                     aria-hidden="true"
@@ -201,10 +219,10 @@ export default function ApplicationLayout({ children }: Props) {
                         <li className="mt-auto">
                           <a
                             href="#"
-                            className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-secondary-200 hover:bg-secondary-700 hover:text-white"
+                            className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-primary-200 hover:bg-primary-700 hover:text-white"
                           >
                             <Cog6ToothIcon
-                              className="h-6 w-6 shrink-0 text-secondary-200 group-hover:text-white"
+                              className="h-6 w-6 shrink-0 text-primary-200 group-hover:text-white"
                               aria-hidden="true"
                             />
                             Settings
@@ -222,21 +240,28 @@ export default function ApplicationLayout({ children }: Props) {
         {/* Static sidebar for desktop */}
         <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
           {/* Sidebar component, swap this element with another sidebar if you like */}
-          <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-secondary-600 pb-4">
+          <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-zinc-50 pb-4">
             <div className="flex h-24 shrink-0 items-center gap-x-0 px-6">
-              <Image
-                className="h-12 w-auto"
-                height={512}
-                width={512}
-                src="/NEO_512_512.svg"
-                alt="NeoCast"
-              />
-              <span className="font-medium text-white text-3xl tracking-wide">
-                neo
-                <span className="ml-1 text-primary-600 uppercase text-2xl tracking-wider">
-                  CAST
-                </span>
-              </span>
+              <Link
+                href="/"
+                aria-label="Home"
+                className="flex items-center gap-x-3"
+              >
+                {/* <Logo className="h-10 w-auto" /> */}
+                <Image
+                  src="/logos/512x512_color.png"
+                  className="h-12 w-12"
+                  alt="NeoCast"
+                  height={512}
+                  width={512}
+                />
+                <div className="text-2xl font-black text-zinc-900">
+                  <div>NeoCast</div>
+                  <div className="-mt-1 text-xs font-medium text-zinc-600">
+                    by BlitzCraft
+                  </div>
+                </div>
+              </Link>
             </div>
 
             <nav className="flex flex-1 flex-col">
@@ -260,15 +285,15 @@ export default function ApplicationLayout({ children }: Props) {
                           href={item.href}
                           className={classNames(
                             item.href === router.pathname
-                              ? "bg-primary-600 text-zinc-900"
-                              : "text-primary-200 hover:text-white hover:bg-primary-600",
+                              ? "bg-primary-600 text-white"
+                              : "text-zinc-700 hover:text-zinc-100 hover:bg-primary-600",
                             "flex items-center group gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                           )}
                         >
                           <item.icon
                             className={classNames(
                               item.href === router.pathname
-                                ? "text-zinc-900"
+                                ? "text-zinc-100"
                                 : "text-primary-200 group-hover:text-white",
                               "h-8 w-8 shrink-0"
                             )}
@@ -295,7 +320,7 @@ export default function ApplicationLayout({ children }: Props) {
                 src="/NEO_512_512.svg"
                 alt="NeoCast"
               />
-              <span className="font-medium text-secondary-600 text-3xl tracking-wide">
+              <span className="font-medium text-primary-600 text-3xl tracking-wide">
                 neo
                 <span className="ml-1 text-primary-600 uppercase text-2xl tracking-wide">
                   CAST
@@ -319,13 +344,13 @@ export default function ApplicationLayout({ children }: Props) {
               />
 
               <div className="flex items-center gap-x-4 lg:gap-x-6 xl:gap-x-2">
-                <button
-                  type="button"
+                <Link
+                  href="/notifications"
                   className="-m-2.5 p-2.5 text-zinc-400 hover:text-zinc-500"
                 >
                   <span className="sr-only">View notifications</span>
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
+                </Link>
 
                 {/* Separator */}
                 <div
@@ -334,7 +359,7 @@ export default function ApplicationLayout({ children }: Props) {
                 />
 
                 {/* Network dropdown */}
-                <Menu as="div" className="relative hidden lg:block">
+                {/* <Menu as="div" className="relative hidden lg:block">
                   <Menu.Button className="-m-1.5 flex items-center p-1.5">
                     <span className="sr-only">Open network menu</span>
                     <Image
@@ -387,53 +412,103 @@ export default function ApplicationLayout({ children }: Props) {
                       </Menu.Item>
                     </Menu.Items>
                   </Transition>
-                </Menu>
+                </Menu> */}
 
-                {/* User menu dropdown */}
-                <Menu as="div" className="relative">
-                  <Menu.Button className="-m-1.5 hidden lg:flex lg:items-center p-1.5">
-                    <span
-                      className="ml-4 text-sm font-semibold leading-6 text-zinc-900"
-                      aria-hidden="true"
+                {/* Neon wallet dropdown */}
+                {NeonEVMAddress === null && (
+                  <Menu as="div" className="relative">
+                    <Menu.Button className="-m-1.5 hidden lg:flex lg:items-center p-1.5">
+                      <span
+                        className="ml-4 text-sm font-semibold leading-6 text-zinc-900"
+                        aria-hidden="true"
+                      >
+                        {walletAddress.slice(0, 4)}...
+                        {walletAddress.slice(walletAddress.length - 4)}
+                      </span>
+                      <ChevronDownIcon
+                        className="ml-2 h-5 w-5 text-zinc-400"
+                        aria-hidden="true"
+                      />
+                    </Menu.Button>
+                    <Transition
+                      as={Fragment}
+                      enter="transition ease-out duration-100"
+                      enterFrom="transform opacity-0 scale-95"
+                      enterTo="transform opacity-100 scale-100"
+                      leave="transition ease-in duration-75"
+                      leaveFrom="transform opacity-100 scale-100"
+                      leaveTo="transform opacity-0 scale-95"
                     >
-                      {walletAddress.slice(0, 4)}...
-                      {walletAddress.slice(walletAddress.length - 4)}
-                    </span>
-                    <ChevronDownIcon
-                      className="ml-2 h-5 w-5 text-zinc-400"
-                      aria-hidden="true"
-                    />
-                  </Menu.Button>
-                  <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-100"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
-                  >
-                    <Menu.Items className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-zinc-900/5 focus:outline-none">
-                      <Menu.Item>
-                        <Link
-                          href={`/profile/${walletAddress}`}
-                          className="hover:bg-zinc-50 block px-3 py-1 text-sm leading-6 text-zinc-900"
-                        >
-                          {walletAddress.slice(0, 4)}...
-                          {walletAddress.slice(walletAddress.length - 4)}
-                        </Link>
-                      </Menu.Item>
-                      <Menu.Item>
-                        <span
-                          onClick={() => signOut()}
-                          className="cursor-pointer hover:bg-zinc-50 block px-3 py-1 text-sm leading-6 text-zinc-900"
-                        >
-                          Disconnect
-                        </span>
-                      </Menu.Item>
-                    </Menu.Items>
-                  </Transition>
-                </Menu>
+                      <Menu.Items className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-zinc-900/5 focus:outline-none">
+                        <Menu.Item>
+                          <Link
+                            href={`/profile/${walletAddress}`}
+                            className="hover:bg-zinc-50 block px-3 py-1 text-sm leading-6 text-zinc-900"
+                          >
+                            {walletAddress.slice(0, 4)}...
+                            {walletAddress.slice(walletAddress.length - 4)}
+                          </Link>
+                        </Menu.Item>
+                        <Menu.Item>
+                          <span
+                            onClick={() => signOut()}
+                            className="cursor-pointer hover:bg-zinc-50 block px-3 py-1 text-sm leading-6 text-zinc-900"
+                          >
+                            Disconnect
+                          </span>
+                        </Menu.Item>
+                      </Menu.Items>
+                    </Transition>
+                  </Menu>
+                )}
+
+                {/* Rainbow wallet dropdown */}
+                {NeonEVMAddress !== null && (
+                  <Menu as="div" className="relative">
+                    <Menu.Button className="-m-1.5 hidden lg:flex lg:items-center p-1.5">
+                      <span
+                        className="ml-4 text-sm font-semibold leading-6 text-zinc-900"
+                        aria-hidden="true"
+                      >
+                        {walletAddress.slice(0, 4)}...
+                        {walletAddress.slice(walletAddress.length - 4)}
+                      </span>
+                      <ChevronDownIcon
+                        className="ml-2 h-5 w-5 text-zinc-400"
+                        aria-hidden="true"
+                      />
+                    </Menu.Button>
+                    <Transition
+                      as={Fragment}
+                      enter="transition ease-out duration-100"
+                      enterFrom="transform opacity-0 scale-95"
+                      enterTo="transform opacity-100 scale-100"
+                      leave="transition ease-in duration-75"
+                      leaveFrom="transform opacity-100 scale-100"
+                      leaveTo="transform opacity-0 scale-95"
+                    >
+                      <Menu.Items className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-zinc-900/5 focus:outline-none">
+                        <Menu.Item>
+                          <Link
+                            href={`/profile/${walletAddress}`}
+                            className="hover:bg-zinc-50 block px-3 py-1 text-sm leading-6 text-zinc-900"
+                          >
+                            {walletAddress.slice(0, 4)}...
+                            {walletAddress.slice(walletAddress.length - 4)}
+                          </Link>
+                        </Menu.Item>
+                        <Menu.Item>
+                          <span
+                            onClick={() => signOut()}
+                            className="cursor-pointer hover:bg-zinc-50 block px-3 py-1 text-sm leading-6 text-zinc-900"
+                          >
+                            Disconnect
+                          </span>
+                        </Menu.Item>
+                      </Menu.Items>
+                    </Transition>
+                  </Menu>
+                )}
               </div>
             </div>
           </div>
@@ -472,9 +547,9 @@ export default function ApplicationLayout({ children }: Props) {
               >
                 <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
                   <div>
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-secondary-100">
+                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary-100">
                       <ArrowPathIcon
-                        className="h-6 w-6 text-secondary-600"
+                        className="h-6 w-6 text-primary-600"
                         aria-hidden="true"
                       />
                     </div>
