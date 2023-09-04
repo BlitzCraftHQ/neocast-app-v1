@@ -19,7 +19,7 @@ const wcOptions = {
   metadata: {
     name: "NeoCast", // your application name to be displayed on the wallet
     description: "Push Notification Service for the Neo Blockchain.", // description to be shown on the wallet
-    url: "https://neocast.blitzcrafthq.com/", // url to be linked on the wallet
+    url: "https://app.neocast.xyz/", // url to be linked on the wallet
     icons: ["https://neocast.blitzcrafthq.com/logo-white.png"], // icon to be shown on the wallet
   },
 };
